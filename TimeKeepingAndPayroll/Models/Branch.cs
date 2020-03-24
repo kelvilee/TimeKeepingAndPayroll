@@ -16,7 +16,6 @@ namespace TimeKeepingAndPayroll.Models
         }
         public Guid ID { get; set; }
         public Guid? ParentID { get; set; }
-
         [Index(IsUnique = true), MaxLength(32)]
         public string Name { get; set; }
         public string Street { get; set; }

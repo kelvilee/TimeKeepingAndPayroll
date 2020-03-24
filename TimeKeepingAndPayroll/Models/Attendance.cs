@@ -12,6 +12,5 @@ namespace TimeKeepingAndPayroll.Models
         public virtual Employee Employee { get; set; }
         public DateTime Timestamp { get; set; }
         public string Activity { get; set; }
-
     }
 }
