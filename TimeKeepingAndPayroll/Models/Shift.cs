@@ -5,7 +5,7 @@ using System.Web;
 
 namespace TimeKeepingAndPayroll.Models
 {
-    public class Shift : Event
+    public class Shift
     {
         public Shift()
         {

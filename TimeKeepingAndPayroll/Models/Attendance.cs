@@ -14,3 +14,4 @@ namespace TimeKeepingAndPayroll.Models
         public string Activity { get; set; }
 
     }
+}
