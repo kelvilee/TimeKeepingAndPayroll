@@ -23,11 +23,13 @@ namespace TimeKeepingAndPayroll.Models
         public string Groups { get; set; } //multiselect list
         public string Description { get; set; }
         public string Password { get; set; }
+        public double PayRate { get; set; }
 
         public virtual Contact EmergencyContact { get; set; }
         public virtual Employee ReportRecipient { get; set; } //ReportingTo [FK] EmployeeEmergency [Drop Down List of Current Employees]
 
         public virtual ICollection<Shift> Shifts { get; set; }
         public virtual ICollection<Attendance> AttendanceHistory { get; set; }
+        public virtual ICollection<Invoice> Invoices { get; set; }
     }
 }
