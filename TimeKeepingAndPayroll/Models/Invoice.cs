@@ -10,7 +10,10 @@ namespace TimeKeepingAndPayroll.Models
     {
         public Guid ID { get; set; }
 
+        [ForeignKey("Employee_ID")]
         public virtual Employee Employee { get; set; }
+
+        public Guid Employee_ID { get; set; }
 
         public double HoursWorked { get; set; }
 

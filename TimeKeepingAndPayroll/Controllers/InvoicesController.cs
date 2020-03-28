@@ -25,7 +25,6 @@ namespace TimeKeepingAndPayroll.Controllers
         {
             return View(db.Invoice.ToList());
         }
-
         // GET: Invoices/Details/5
         public ActionResult Details(Guid? id)
         {
@@ -44,6 +43,7 @@ namespace TimeKeepingAndPayroll.Controllers
         // GET: Invoices/Create
         public ActionResult Create()
         {
+            ViewBag.Employee_ID = new SelectList(db.Person.OfType<Employee>(), "ID", "Role");
             return View();
         }
 
@@ -52,16 +52,17 @@ namespace TimeKeepingAndPayroll.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,HoursWorked,PayPeriodStart,PayPeriodEnd,PayDate,TotalAmount,IncomeTax,CPP,IE,Vacation,NetAmount")] Invoice invoice)
+        public ActionResult Create([Bind(Include = "ID,Employee_ID,HoursWorked,PayPeriodStart,PayPeriodEnd,PayDate,TotalAmount,IncomeTax,CPP,IE,Vacation,NetAmount")] Invoice invoice)
         {
             if (ModelState.IsValid)
             {
                 invoice.ID = Guid.NewGuid();
                 db.Invoice.Add(invoice);
                 db.SaveChanges();
-                return RedirectToAction("EmployeeIndex");
+                return RedirectToAction("Index");
             }
 
+            ViewBag.Employee_ID = new SelectList(db.Employee, "ID", "Role", invoice.Employee_ID);
             return View(invoice);
         }
 
@@ -77,6 +78,7 @@ namespace TimeKeepingAndPayroll.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.Employee_ID = new SelectList(db.Person, "ID", "Role", invoice.Employee_ID);
             return View(invoice);
         }
 
@@ -85,14 +87,15 @@ namespace TimeKeepingAndPayroll.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,HoursWorked,PayPeriodStart,PayPeriodEnd,PayDate,TotalAmount,IncomeTax,CPP,IE,Vacation,NetAmount")] Invoice invoice)
+        public ActionResult Edit([Bind(Include = "ID,Employee_ID,HoursWorked,PayPeriodStart,PayPeriodEnd,PayDate,TotalAmount,IncomeTax,CPP,IE,Vacation,NetAmount")] Invoice invoice)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(invoice).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("EmployeeIndex");
+                return RedirectToAction("Index");
             }
+            ViewBag.Employee_ID = new SelectList(db.Person, "ID", "Role", invoice.Employee_ID);
             return View(invoice);
         }
 
@@ -119,7 +122,7 @@ namespace TimeKeepingAndPayroll.Controllers
             Invoice invoice = db.Invoice.Find(id);
             db.Invoice.Remove(invoice);
             db.SaveChanges();
-            return RedirectToAction("EmployeeIndex");
+            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)

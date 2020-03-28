@@ -9,7 +9,7 @@
 <h2>Pay History</h2>
 
 <p>
-    @*@Html.ActionLink("Create New", "Create")*@
+    @Html.ActionLink("create new", "create")
     <br />
 </p>
 <table class="table">
@@ -42,7 +42,11 @@
                 @Html.ActionLink(" ", "Email", new { id = item.ID }, new { @class = "glyphicon glyphicon-envelope" })
             </td>
             <td>
+<<<<<<< HEAD
                 @Html.ActionLink(" ", "Details", new { id = item.ID }, new { @class = "glyphicon glyphicon-print"})
+=======
+                @Html.ActionLink(" ", "Details", new { id = item.ID }, new { @class = "glyphicon glyphicon-print" })
+>>>>>>> ff2a72b... edited tpt, added printing for invoice details
             </td>
             <td>
                 @*@Html.ActionLink("Edit", "Edit", new { id = item.ID }) |*@

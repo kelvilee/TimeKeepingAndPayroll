@@ -1,7 +1,19 @@
-﻿
+﻿@model IEnumerable<TimeKeepingAndPayroll.Models.Invoice>
+
 @{
-    ViewBag.Title = "ManagerEmployee";
+    ViewBag.Title = "PayrollManager";
 }
 
-<h2>ManagerEmployee</h2>
+<h2>HR Payroll Manager</h2>
 
+<br />
+<br />
+Please select an Employee:
+<br />
+<select class="form-control" id="ParentID" name="ParentID">
+    @foreach (var item in Model)
+    {
+            <option value="@item.ID">@item.Employee_ID</option>
+        }
+    }
+</select>
