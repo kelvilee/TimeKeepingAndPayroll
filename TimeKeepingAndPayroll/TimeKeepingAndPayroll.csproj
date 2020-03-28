@@ -129,7 +129,11 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AttendancesController.cs" />
+    <Compile Include="Controllers\BranchesController.cs" />
+    <Compile Include="Controllers\ContactsController.cs" />
+    <Compile Include="Controllers\EmployeesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PeopleController.cs" />
     <Compile Include="Controllers\InvoicesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -196,6 +200,27 @@
     <Content Include="Views\Invoices\Edit.cshtml" />
     <Content Include="Views\Invoices\EmployeeIndex.cshtml" />
     <Content Include="Views\Invoices\ManagerIndex.cshtml" />
+    <Content Include="Views\Employees\Create.cshtml" />
+    <Content Include="Views\Employees\Delete.cshtml" />
+    <Content Include="Views\Employees\Details.cshtml" />
+    <Content Include="Views\Employees\Edit.cshtml" />
+    <Content Include="Views\Employees\Index.cshtml" />
+    <Content Include="Views\People\Create.cshtml" />
+    <Content Include="Views\People\Delete.cshtml" />
+    <Content Include="Views\People\Details.cshtml" />
+    <Content Include="Views\People\Edit.cshtml" />
+    <Content Include="Views\People\Index.cshtml" />
+    <Content Include="Views\Employees\Login.cshtml" />
+    <Content Include="Views\Branches\Create.cshtml" />
+    <Content Include="Views\Branches\Delete.cshtml" />
+    <Content Include="Views\Branches\Details.cshtml" />
+    <Content Include="Views\Branches\Edit.cshtml" />
+    <Content Include="Views\Branches\Index.cshtml" />
+    <Content Include="Views\Contacts\Create.cshtml" />
+    <Content Include="Views\Contacts\Delete.cshtml" />
+    <Content Include="Views\Contacts\Details.cshtml" />
+    <Content Include="Views\Contacts\Edit.cshtml" />
+    <Content Include="Views\Contacts\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
