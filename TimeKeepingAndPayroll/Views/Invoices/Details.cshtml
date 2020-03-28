@@ -34,6 +34,10 @@
             @Html.DisplayFor(model => model.PayPeriodEnd)
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.PayDate)
+        </dt>
+
         <dd>
             @Html.DisplayFor(model => model.PayDate)
         </dd>
@@ -92,3 +96,7 @@
     @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
     @Html.ActionLink("Back to List", "EmployeeIndex")
 </p>
+
+<script>
+    window.print();
+</script>

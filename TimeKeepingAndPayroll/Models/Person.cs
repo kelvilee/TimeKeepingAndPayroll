@@ -1,8 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TimeKeepingAndPayroll.Models
 {
+    [Table("People")]
+
     public class Person
     {
 

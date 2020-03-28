@@ -2,13 +2,14 @@
 
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Payroll History";
 }
+
 
 <h2>Pay History</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @*@Html.ActionLink("Create New", "Create")*@
     <br />
 </p>
 <table class="table">
@@ -17,10 +18,7 @@
             @Html.DisplayNameFor(model => model.PayDate)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.PayPeriodStart)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PayPeriodEnd)
+            Pay Period
         </th>
         <th>
             Email
@@ -37,16 +35,14 @@
                 @Convert.ToDateTime(item.PayDate).ToString("dd/MM/yyyy")
             </td>
             <td>
-                @Convert.ToDateTime(item.PayPeriodStart).ToString("dd/MM/yyyy")
-            </td>
-            <td>
+                @Convert.ToDateTime(item.PayPeriodStart).ToString("dd/MM/yyyy") -
                 @Convert.ToDateTime(item.PayPeriodEnd).ToString("dd/MM/yyyy")
             </td>
             <td>
                 @Html.ActionLink(" ", "Email", new { id = item.ID }, new { @class = "glyphicon glyphicon-envelope" })
             </td>
             <td>
-                @Html.ActionLink(" ", "Print", new { id = item.ID }, new { @class = "glyphicon glyphicon-print" })
+                @Html.ActionLink(" ", "Details", new { id = item.ID }, new { @class = "glyphicon glyphicon-print"})
             </td>
             <td>
                 @*@Html.ActionLink("Edit", "Edit", new { id = item.ID }) |*@

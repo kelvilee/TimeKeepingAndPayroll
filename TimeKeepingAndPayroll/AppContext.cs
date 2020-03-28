@@ -9,7 +9,7 @@ namespace TimeKeepingAndPayroll
 {
     public class AppContext : DbContext
     {
-        public AppContext() : base("DefaultConnection")
+        public AppContext() : base("TimeKeepingDB")
         {
             this.Configuration.LazyLoadingEnabled = false;
         }
