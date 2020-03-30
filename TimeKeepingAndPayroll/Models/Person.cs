@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace TimeKeepingAndPayroll.Models
 {
@@ -10,6 +11,8 @@ namespace TimeKeepingAndPayroll.Models
         public Guid? BranchID { get; set; }
 
         public virtual Branch Branch { get; set; }
+
+        [Required]
         public virtual FullName Name { get; set; }
         public virtual FullAddress HomeAddress { get; set; }
         public virtual FullAddress WorkAddress { get; set; }

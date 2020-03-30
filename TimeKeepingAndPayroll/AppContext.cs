@@ -8,7 +8,7 @@ namespace TimeKeepingAndPayroll
 {
     public class AppContext : DbContext
     {
-        public AppContext() : base("DefaultConnection")
+        public AppContext() : base("TimeKeepingDB")
         {
             this.Configuration.LazyLoadingEnabled = false;
         }
@@ -21,6 +21,7 @@ namespace TimeKeepingAndPayroll
         public DbSet<FullAddress> FullAddresses { get; set; }
         public DbSet<FullName> FullNames { get; set; }
         public DbSet<Service> Services { get; set; }
+        public DbSet<Person> People { get; set; }
     }
 
     public class AppDBInitializer : CreateDatabaseIfNotExists<AppContext>
