@@ -1,0 +1,55 @@
+﻿@model IEnumerable<TimeKeepingAndPayroll.Models.Invoice>
+
+
+@{
+    ViewBag.Title = "Payroll History";
+}
+
+
+<h2>Pay History</h2>
+
+<p>
+    @*@Html.ActionLink("Create New", "Create")*@
+    <br />
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.PayDate)
+        </th>
+        <th>
+            Pay Period
+        </th>
+        <th>
+            Email
+        </th>
+        <th>
+            Print
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Convert.ToDateTime(item.PayDate).ToString("dd/MM/yyyy")
+            </td>
+            <td>
+                @Convert.ToDateTime(item.PayPeriodStart).ToString("dd/MM/yyyy") -
+                @Convert.ToDateTime(item.PayPeriodEnd).ToString("dd/MM/yyyy")
+            </td>
+            <td>
+                @Html.ActionLink(" ", "Email", new { id = item.ID }, new { @class = "glyphicon glyphicon-envelope" })
+            </td>
+            <td>
+                @Html.ActionLink(" ", "Details", new { id = item.ID }, new { @class = "glyphicon glyphicon-print"})
+            </td>
+            <td>
+                @*@Html.ActionLink("Edit", "Edit", new { id = item.ID }) |*@
+                @Html.ActionLink("Details", "Details", new { id = item.ID })
+                @*@Html.ActionLink("Delete", "Delete", new { id = item.ID })*@
+            </td>
+        </tr>
+    }
+
+</table>
