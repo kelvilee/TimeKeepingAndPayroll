@@ -23,7 +23,7 @@ namespace TimeKeepingAndPayroll.Controllers
         }
 
         // GET: Attendances/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(Guid? id)
         {
             if (id == null)
             {
@@ -40,7 +40,7 @@ namespace TimeKeepingAndPayroll.Controllers
         // GET: Attendances/Create
         public ActionResult Create()
         {
-            ViewBag.EmployeeID = new SelectList(db.Employee, "ID", "EmployeeID");
+            ViewBag.EmployeeID = new SelectList(db.Employee, "EmployeeID", "EmployeeID");
             return View();
         }
 
@@ -64,7 +64,7 @@ namespace TimeKeepingAndPayroll.Controllers
         }
 
         // GET: Attendances/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(Guid? id)
         {
             if (id == null)
             {
@@ -75,7 +75,7 @@ namespace TimeKeepingAndPayroll.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.EmployeeID = new SelectList(db.Employee, "ID", "EmployeeID", attendance.EmployeeID);
+            ViewBag.EmployeeID = new SelectList(db.Employee, "EmployeeID", "EmployeeID", attendance.EmployeeID);
             return View(attendance);
         }
 
@@ -97,7 +97,7 @@ namespace TimeKeepingAndPayroll.Controllers
         }
 
         // GET: Attendances/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(Guid? id)
         {
             if (id == null)
             {
@@ -114,7 +114,7 @@ namespace TimeKeepingAndPayroll.Controllers
         // POST: Attendances/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(Guid? id)
         {
             Attendance attendance = db.Attendance.Find(id);
             db.Attendance.Remove(attendance);

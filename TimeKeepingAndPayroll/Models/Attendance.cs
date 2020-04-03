@@ -12,7 +12,7 @@ namespace TimeKeepingAndPayroll.Models
         public DateTime Timestamp { get; set; }
         public Status Activity { get; set; }
 
-        public Guid EmployeeID { get; set; }
+        public int EmployeeID { get; set; }
         public Employee Employee { get; set; }
 
     }
