@@ -36,10 +36,20 @@ namespace TimeKeepingAndPayroll.Controllers
             var obj = db.Employee.Where(a => a.EmployeeID.Equals(e.EmployeeID) && a.Password.Equals(e.Password)).FirstOrDefault();
             if (obj != null)
             {
-                // Do timestamp stuff
-                return RedirectToAction("Index");
+                var attendance = new Attendance
+                {
+                    Employee = obj,
+                    ID = Guid.NewGuid(),
+                    EmployeeID = e.EmployeeID,
+                    Timestamp = DateTime.Now,
+                    Activity = Status.IN
+                };
+                db.Attendance.Add(attendance);
+                db.SaveChanges();
+                ViewBag.Message = "Punched!";
+                return View();
             }
-            ViewBag.Message = "Logged in";
+            ViewBag.Message = "Incorrect EmployeeID/Password";
             return View();
         }
 

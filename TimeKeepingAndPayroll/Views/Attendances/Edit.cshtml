@@ -1,4 +1,6 @@
-﻿@model TimeKeepingAndPayroll.Models.Attendance
+﻿@using TimeKeepingAndPayroll.Models
+
+@model TimeKeepingAndPayroll.Models.Attendance
 
 @{
     ViewBag.Title = "Edit";
@@ -10,7 +12,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Attendance</h4>
         <hr />
@@ -20,7 +22,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.EmployeeID, "EmployeeID", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("EmployeeID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("EmployeeID", null, "Select ...", htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.EmployeeID, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -28,7 +30,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Timestamp, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Timestamp, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Timestamp, new { htmlAttributes = new { @class = "form-control" , @type = "datetime-local"} })
                 @Html.ValidationMessageFor(model => model.Timestamp, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -36,7 +38,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Activity, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Activity, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DropDownList("Activity", new SelectList(Enum.GetValues(typeof(Status))), "Select ...", new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Activity, "", new { @class = "text-danger" })
             </div>
         </div>
