@@ -25,7 +25,7 @@ namespace TimeKeepingAndPayroll
         public DbSet<Service> Service { get; set; }
         public DbSet<Shift> Shift { get; set; }
     }
-    public class AppDBInitializer : CreateDatabaseIfNotExists<AppContext>
+    public class AppDBInitializer : DropCreateDatabaseIfModelChanges<AppContext>
     {
         protected override void Seed(AppContext context)
         {
