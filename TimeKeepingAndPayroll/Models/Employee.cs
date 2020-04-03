@@ -19,6 +19,7 @@ namespace TimeKeepingAndPayroll.Models
         public Guid? EmergencyContactID { get; set; }
         public Guid? ReportRecipientID { get; set; }
 
+        public int EmployeeID { get; set; }
         public string Role { get; set; } //[management | staff]
         public string JobTitle { get; set; }
         public string EmploymentStatus { get; set; }
