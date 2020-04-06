@@ -18,7 +18,7 @@ namespace TimeKeepingAndPayroll.Controllers
         // GET: Attendances
         public ActionResult Index()
         {
-            var attendances = db.Attendances.Include(a => a.Employee);
+            var attendances = db.Attendance.Include(a => a.Employee);
             return View(attendances.ToList());
         }
 
@@ -29,7 +29,7 @@ namespace TimeKeepingAndPayroll.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Attendance attendance = db.Attendances.Find(id);
+            Attendance attendance = db.Attendance.Find(id);
             if (attendance == null)
             {
                 return HttpNotFound();
@@ -40,7 +40,7 @@ namespace TimeKeepingAndPayroll.Controllers
         // GET: Attendances/Create
         public ActionResult Create()
         {
-            ViewBag.EmployeeID = new SelectList(db.People, "ID", "Role");
+            ViewBag.EmployeeID = new SelectList(db.Person, "ID", "Role");
             return View();
         }
 
@@ -53,12 +53,12 @@ namespace TimeKeepingAndPayroll.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Attendances.Add(attendance);
+                db.Attendance.Add(attendance);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.EmployeeID = new SelectList(db.People, "ID", "Role", attendance.EmployeeID);
+            ViewBag.EmployeeID = new SelectList(db.Person, "ID", "Role", attendance.EmployeeID);
             return View(attendance);
         }
 
@@ -69,12 +69,12 @@ namespace TimeKeepingAndPayroll.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Attendance attendance = db.Attendances.Find(id);
+            Attendance attendance = db.Attendance.Find(id);
             if (attendance == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.EmployeeID = new SelectList(db.People, "ID", "Role", attendance.EmployeeID);
+            ViewBag.EmployeeID = new SelectList(db.Person, "ID", "Role", attendance.EmployeeID);
             return View(attendance);
         }
 
@@ -91,7 +91,7 @@ namespace TimeKeepingAndPayroll.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.EmployeeID = new SelectList(db.People, "ID", "Role", attendance.EmployeeID);
+            ViewBag.EmployeeID = new SelectList(db.Person, "ID", "Role", attendance.EmployeeID);
             return View(attendance);
         }
 
@@ -102,7 +102,7 @@ namespace TimeKeepingAndPayroll.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Attendance attendance = db.Attendances.Find(id);
+            Attendance attendance = db.Attendance.Find(id);
             if (attendance == null)
             {
                 return HttpNotFound();
@@ -115,8 +115,8 @@ namespace TimeKeepingAndPayroll.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Attendance attendance = db.Attendances.Find(id);
-            db.Attendances.Remove(attendance);
+            Attendance attendance = db.Attendance.Find(id);
+            db.Attendance.Remove(attendance);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

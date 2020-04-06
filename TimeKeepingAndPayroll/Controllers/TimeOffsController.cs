@@ -18,7 +18,7 @@ namespace TimeKeepingAndPayroll.Controllers
         // GET: TimeOffs
         public ActionResult Index()
         {
-            var timesOff = db.TimesOff.Include(t => t.Employee);
+            var timesOff = db.TimeOff.Include(t => t.Employee);
             return View(timesOff.ToList());
         }
 
@@ -29,7 +29,7 @@ namespace TimeKeepingAndPayroll.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TimeOff timeOff = db.TimesOff.Find(id);
+            TimeOff timeOff = db.TimeOff.Find(id);
             if (timeOff == null)
             {
                 return HttpNotFound();
@@ -40,7 +40,7 @@ namespace TimeKeepingAndPayroll.Controllers
         // GET: TimeOffs/Create
         public ActionResult Create()
         {
-            ViewBag.EmployeeID = new SelectList(db.People, "ID", "Role");
+            ViewBag.EmployeeID = new SelectList(db.Employee.Include("Name"), "ID", "Name.FirstName");
             return View();
         }
 
@@ -49,16 +49,17 @@ namespace TimeKeepingAndPayroll.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,EmployeeID,StartDate,EndDate,Reason,Approved")] TimeOff timeOff)
+        public ActionResult Create([Bind(Include = "ID,EmployeeID,StartDate,EndDate,Reason")] TimeOff timeOff)
         {
             if (ModelState.IsValid)
             {
-                db.TimesOff.Add(timeOff);
+                timeOff.Approved = false;
+                db.TimeOff.Add(timeOff);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.EmployeeID = new SelectList(db.People, "ID", "Role", timeOff.EmployeeID);
+            ViewBag.EmployeeID = new SelectList(db.Employee.Include("Name"), "ID", "Name.FirstName");
             return View(timeOff);
         }
 
@@ -69,12 +70,12 @@ namespace TimeKeepingAndPayroll.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TimeOff timeOff = db.TimesOff.Find(id);
+            TimeOff timeOff = db.TimeOff.Find(id);
             if (timeOff == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.EmployeeID = new SelectList(db.People, "ID", "Role", timeOff.EmployeeID);
+            ViewBag.EmployeeID = new SelectList(db.Employee.Include("Name"), "ID", "Name.FirstName");
             return View(timeOff);
         }
 
@@ -83,7 +84,7 @@ namespace TimeKeepingAndPayroll.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,EmployeeID,StartDate,EndDate,Reason,Approved")] TimeOff timeOff)
+        public ActionResult Edit([Bind(Include = "ID,EmployeeID,StartDate,EndDate,Reason")] TimeOff timeOff)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +92,7 @@ namespace TimeKeepingAndPayroll.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.EmployeeID = new SelectList(db.People, "ID", "Role", timeOff.EmployeeID);
+            ViewBag.EmployeeID = new SelectList(db.Employee.Include("Name"), "ID", "Name.FirstName");
             return View(timeOff);
         }
 
@@ -102,7 +103,7 @@ namespace TimeKeepingAndPayroll.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TimeOff timeOff = db.TimesOff.Find(id);
+            TimeOff timeOff = db.TimeOff.Find(id);
             if (timeOff == null)
             {
                 return HttpNotFound();
@@ -115,8 +116,8 @@ namespace TimeKeepingAndPayroll.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            TimeOff timeOff = db.TimesOff.Find(id);
-            db.TimesOff.Remove(timeOff);
+            TimeOff timeOff = db.TimeOff.Find(id);
+            db.TimeOff.Remove(timeOff);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

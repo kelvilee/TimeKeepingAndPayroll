@@ -14,6 +14,5 @@ namespace TimeKeepingAndPayroll.Models
         public DateTime EndDate{ get; set; }
         public string Reason { get; set; }
         public bool Approved { get; set; }
-
     }
 }

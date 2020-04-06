@@ -18,7 +18,7 @@ namespace TimeKeepingAndPayroll.Controllers
         // GET: Employees
         public ActionResult Index()
         {
-            var people = db.Employees.Include(e => e.Branch).Include(e => e.Name).Include(e => e.EmergencyContact).Include(e => e.ReportRecipient);
+            var people = db.Employee.Include(e => e.Branch).Include(e => e.Name).Include(e => e.EmergencyContact).Include(e => e.ReportRecipient);
             return View(people.ToList());
         }
 
@@ -29,7 +29,7 @@ namespace TimeKeepingAndPayroll.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Employee employee = db.Employees.Find(id);
+            Employee employee = db.Employee.Find(id);
             if (employee == null)
             {
                 return HttpNotFound();
@@ -40,10 +40,10 @@ namespace TimeKeepingAndPayroll.Controllers
         // GET: Employees/Create
         public ActionResult Create()
         {
-            ViewBag.BranchID = new SelectList(db.Branches, "ID", "Name");
-            ViewBag.ID = new SelectList(db.FullNames, "ID", "Title");
-            ViewBag.EmergencyContactID = new SelectList(db.People, "ID", "RelationPrimary");
-            ViewBag.ReportRecipientID = new SelectList(db.People, "ID", "Role");
+            ViewBag.BranchID = new SelectList(db.Branch, "ID", "Name");
+            ViewBag.ID = new SelectList(db.FullName, "ID", "Title");
+            ViewBag.EmergencyContactID = new SelectList(db.Person, "ID", "RelationPrimary");
+            ViewBag.ReportRecipientID = new SelectList(db.Person, "ID", "Role");
             return View();
         }
 
@@ -57,15 +57,15 @@ namespace TimeKeepingAndPayroll.Controllers
             if (ModelState.IsValid)
             {
                 employee.ID = Guid.NewGuid();
-                db.People.Add(employee);
+                db.Person.Add(employee);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.BranchID = new SelectList(db.Branches, "ID", "Name", employee.BranchID);
-            ViewBag.ID = new SelectList(db.FullNames, "ID", "Title", employee.ID);
-            ViewBag.EmergencyContactID = new SelectList(db.People, "ID", "RelationPrimary", employee.EmergencyContactID);
-            ViewBag.ReportRecipientID = new SelectList(db.People, "ID", "Role", employee.ReportRecipientID);
+            ViewBag.BranchID = new SelectList(db.Branch, "ID", "Name", employee.BranchID);
+            ViewBag.ID = new SelectList(db.FullName, "ID", "Title", employee.ID);
+            ViewBag.EmergencyContactID = new SelectList(db.Person, "ID", "RelationPrimary", employee.EmergencyContactID);
+            ViewBag.ReportRecipientID = new SelectList(db.Person, "ID", "Role", employee.ReportRecipientID);
             return View(employee);
         }
 
@@ -76,15 +76,15 @@ namespace TimeKeepingAndPayroll.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Employee employee = db.Employees.Find(id);
+            Employee employee = db.Employee.Find(id);
             if (employee == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.BranchID = new SelectList(db.Branches, "ID", "Name", employee.BranchID);
-            ViewBag.ID = new SelectList(db.FullNames, "ID", "Title", employee.ID);
-            ViewBag.EmergencyContactID = new SelectList(db.People, "ID", "RelationPrimary", employee.EmergencyContactID);
-            ViewBag.ReportRecipientID = new SelectList(db.People, "ID", "Role", employee.ReportRecipientID);
+            ViewBag.BranchID = new SelectList(db.Branch, "ID", "Name", employee.BranchID);
+            ViewBag.ID = new SelectList(db.FullName, "ID", "Title", employee.ID);
+            ViewBag.EmergencyContactID = new SelectList(db.Person, "ID", "RelationPrimary", employee.EmergencyContactID);
+            ViewBag.ReportRecipientID = new SelectList(db.Person, "ID", "Role", employee.ReportRecipientID);
             return View(employee);
         }
 
@@ -101,10 +101,10 @@ namespace TimeKeepingAndPayroll.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.BranchID = new SelectList(db.Branches, "ID", "Name", employee.BranchID);
-            ViewBag.ID = new SelectList(db.FullNames, "ID", "Title", employee.ID);
-            ViewBag.EmergencyContactID = new SelectList(db.People, "ID", "RelationPrimary", employee.EmergencyContactID);
-            ViewBag.ReportRecipientID = new SelectList(db.People, "ID", "Role", employee.ReportRecipientID);
+            ViewBag.BranchID = new SelectList(db.Branch, "ID", "Name", employee.BranchID);
+            ViewBag.ID = new SelectList(db.FullName, "ID", "Title", employee.ID);
+            ViewBag.EmergencyContactID = new SelectList(db.Person, "ID", "RelationPrimary", employee.EmergencyContactID);
+            ViewBag.ReportRecipientID = new SelectList(db.Person, "ID", "Role", employee.ReportRecipientID);
             return View(employee);
         }
 
@@ -115,7 +115,7 @@ namespace TimeKeepingAndPayroll.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Employee employee = db.Employees.Find(id);
+            Employee employee = db.Employee.Find(id);
             if (employee == null)
             {
                 return HttpNotFound();
@@ -128,8 +128,8 @@ namespace TimeKeepingAndPayroll.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
         {
-            Employee employee = db.Employees.Find(id);
-            db.People.Remove(employee);
+            Employee employee = db.Employee.Find(id);
+            db.Person.Remove(employee);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
