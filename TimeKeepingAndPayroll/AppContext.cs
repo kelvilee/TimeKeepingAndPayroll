@@ -24,6 +24,7 @@ namespace TimeKeepingAndPayroll
         public DbSet<Person> Person { get; set; }
         public DbSet<Service> Service { get; set; }
         public DbSet<Shift> Shift { get; set; }
+        public DbSet<TimeOff> TimeOff { get; set; }
     }
     public class AppDBInitializer : CreateDatabaseIfNotExists<AppContext>
     {
