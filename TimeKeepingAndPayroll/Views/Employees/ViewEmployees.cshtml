@@ -1,0 +1,63 @@
+﻿@model IEnumerable<TimeKeepingAndPayroll.Models.Employee>
+
+@{
+    ViewBag.Title = "ViewEmployees";
+}
+
+<h2>ViewEmployees</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.EmployeeID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Role)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.JobTitle)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EmploymentStatus)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PayRate)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmployeeID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name.FirstName)
+                @Html.DisplayFor(modelItem => item.Name.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JobTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmploymentStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PayRate)
+            </td>
+            <td>
+                @Html.ActionLink("Edit Attendance", "EditAttendance", "Attendances", new { id = item.EmployeeID }, null)
+            </td>
+        </tr>
+    }
+
+</table>

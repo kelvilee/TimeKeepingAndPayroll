@@ -25,13 +25,13 @@
             </div>
         </div>
 
-        <div class="form-group">
+        @*<div class="form-group">
             @Html.LabelFor(model => model.EmergencyContactID, "EmergencyContactID", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("EmergencyContactID", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.EmergencyContactID, "", new { @class = "text-danger" })
             </div>
-        </div>
+        </div>*@
 
         <div class="form-group">
             @Html.LabelFor(model => model.ReportRecipientID, "ReportRecipientID", htmlAttributes: new { @class = "control-label col-md-2" })

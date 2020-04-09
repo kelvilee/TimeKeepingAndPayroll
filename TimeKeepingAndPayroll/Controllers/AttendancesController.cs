@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using TimeKeepingAndPayroll;
@@ -20,6 +21,34 @@ namespace TimeKeepingAndPayroll.Controllers
         {
             var attendance = db.Attendance.Include(a => a.Employee);
             return View(attendance.ToList());
+        }
+
+        // GET: Attendances/id
+        public ActionResult EditAttendance(int? id)
+        {
+            var attendances = db.Attendance.Where(e => e.EmployeeID == id).OrderByDescending(t => t.Timestamp);
+            return View(attendances.ToList());
+        }
+
+        // GET: Attendances
+        public ActionResult HoursWorked(int? id)
+        {
+            var attendances = db.Attendance.Where(e => e.EmployeeID == id).OrderByDescending(t => t.Timestamp);
+            TimeSpan output = new TimeSpan(0, 0, 0);
+            using (var enumerator = attendances.GetEnumerator())
+            {
+                while (enumerator.MoveNext())
+                {
+                    var begin = enumerator.Current.Timestamp;
+                    if (!enumerator.MoveNext())
+                        break;
+
+                    var end = enumerator.Current.Timestamp;
+                    output += (begin - end);
+                }
+            }
+            ViewBag.Message = output.TotalHours;
+            return View(attendances.ToList());
         }
 
         // GET: Attendances/Details/5
@@ -90,7 +119,16 @@ namespace TimeKeepingAndPayroll.Controllers
             {
                 db.Entry(attendance).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                //GMailer.GmailUsername = "batmanatbcit@gmail.com";
+                //GMailer.GmailPassword = "brucewayne123";
+
+                //GMailer mailer = new GMailer();
+                //mailer.ToEmail = db.Person.OfType<Employee>().Include(e => e.HomeAddress).Where(e => e.EmployeeID == attendance.EmployeeID).FirstOrDefault().HomeAddress.Email;
+                //mailer.Subject = "Your work hours have been edited";
+                //mailer.Body = "Please check your hours worked for updated hours";
+                //mailer.IsHtml = true;
+                //mailer.Send();
+                return RedirectToAction("EditAttendance", "Attendances", new { id = attendance.EmployeeID });
             }
             ViewBag.EmployeeID = new SelectList(db.Employee, "ID", "EmployeeID", attendance.EmployeeID);
             return View(attendance);
@@ -129,6 +167,46 @@ namespace TimeKeepingAndPayroll.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+    }
+
+    public class GMailer
+    {
+        public static string GmailUsername { get; set; }
+        public static string GmailPassword { get; set; }
+        public static string GmailHost { get; set; }
+        public static int GmailPort { get; set; }
+        public static bool GmailSSL { get; set; }
+
+        public string ToEmail { get; set; }
+        public string Subject { get; set; }
+        public string Body { get; set; }
+        public bool IsHtml { get; set; }
+
+        static GMailer()
+        {
+            GmailHost = "smtp.gmail.com";
+            GmailPort = 25; // Gmail can use ports 25, 465 & 587; but must be 25 for medium trust environment.
+            GmailSSL = true;
+        }
+
+        public void Send()
+        {
+            SmtpClient smtp = new SmtpClient();
+            smtp.Host = GmailHost;
+            smtp.Port = GmailPort;
+            smtp.EnableSsl = GmailSSL;
+            smtp.UseDefaultCredentials = false;
+            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtp.Credentials = new NetworkCredential(GmailUsername, GmailPassword);
+
+            using (var message = new MailMessage(GmailUsername, ToEmail))
+            {
+                message.Subject = Subject;
+                message.Body = Body;
+                message.IsBodyHtml = IsHtml;
+                smtp.Send(message);
+            }
         }
     }
 }

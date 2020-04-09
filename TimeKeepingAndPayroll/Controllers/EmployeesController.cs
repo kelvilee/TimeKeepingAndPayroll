@@ -24,6 +24,13 @@ namespace TimeKeepingAndPayroll.Controllers
             return View(employee.ToList());
         }
 
+        // GET: Employees/ViewEmployees/id
+        public ActionResult ViewEmployees(Guid? id)
+        {
+            var employee = db.Employee.Include(e => e.Name).Where(e => e.ReportRecipientID == id);
+            return View(employee.ToList());
+        }
+
         // GET: Employees/Login
         public ActionResult Login()
         {
