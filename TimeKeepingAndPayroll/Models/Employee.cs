@@ -26,6 +26,7 @@ namespace TimeKeepingAndPayroll.Models
         public string Groups { get; set; } //multiselect list
         public string Description { get; set; }
         public string Password { get; set; }
+        public int VacationDays { get; set; }
         public double PayRate { get; set; }
 
         public virtual Contact EmergencyContact { get; set; }

@@ -10,6 +10,8 @@ namespace TimeKeepingAndPayroll.Models
         public int ID { get; set; }
         public Guid EmployeeID { get; set; }
         public virtual Employee Employee { get; set; }
+        public Guid? ReplacementID { get; set; }
+        public virtual Employee Replacement { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate{ get; set; }
         public string Reason { get; set; }

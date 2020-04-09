@@ -19,6 +19,8 @@ namespace TimeKeepingAndPayroll.Controllers
         public ActionResult Index()
         {
             var employee = db.Employee.Include(e => e.Branch).Include(e => e.Name).Include(e => e.EmergencyContact).Include(e => e.ReportRecipient);
+            var customersPerCity = db.Person.OfType<Employee>().Include("HomeAddress").GroupBy(x => x.HomeAddress.Street).Select(x => new { Street = x.Key, Customers = x.Count() }).ToList();
+            Console.WriteLine(customersPerCity);
             return View(employee.ToList());
         }
 
@@ -94,6 +96,7 @@ namespace TimeKeepingAndPayroll.Controllers
                 employee.Name = name;
                 employee.HomeAddress = homeAddress;
                 employee.WorkAddress = workAddress;
+                employee.VacationDays = 15;
                 db.Person.Add(employee);
                 db.SaveChanges();
                 return RedirectToAction("Index");

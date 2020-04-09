@@ -254,7 +254,8 @@
     <Content Include="Views\TimeOffs\Details.cshtml" />
     <Content Include="Views\TimeOffs\Edit.cshtml" />
     <Content Include="Views\TimeOffs\Index.cshtml" />
-    <Content Include="Views\TimeOffs\EmployeeIndex.cshtml" />
+    <Content Include="Views\TimeOffs\ManagerIndex.cshtml" />
+    <Content Include="Views\TimeOffs\Approve.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
