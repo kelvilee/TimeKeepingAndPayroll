@@ -42,6 +42,9 @@
             @Html.DisplayNameFor(model => model.PayRate)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.VacationDays)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.EmergencyContact.RelationPrimary)
         </th>
         <th>
@@ -51,50 +54,53 @@
     </tr>
 
 @foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name.FirstName)
-            @Html.DisplayFor(modelItem => item.Name.LastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Role)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.JobTitle)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EmploymentStatus)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ReportsTo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Groups)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Password)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PayRate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EmergencyContact.RelationPrimary)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ReportRecipient.Role)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
-        </td>
-    </tr>
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Name.FirstName)
+        @Html.DisplayFor(modelItem => item.Name.LastName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Name.Title)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Role)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.JobTitle)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.EmploymentStatus)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.ReportsTo)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Groups)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Description)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Password)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.PayRate)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.VacationDays)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.EmergencyContact.RelationPrimary)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.ReportRecipient.Role)
+    </td>
+    <td>
+        @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+        @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+        @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+    </td>
+</tr>
 }
 
 </table>

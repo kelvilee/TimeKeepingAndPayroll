@@ -22,6 +22,13 @@ namespace TimeKeepingAndPayroll.Controllers
             return View(timesOff.ToList());
         }
 
+        // GET: TimeOffs
+        public ActionResult ManagerIndex()
+        {
+            var timesOff = db.TimeOff.Include(t => t.Employee);
+            return View(timesOff.ToList());
+        }
+
         // GET: TimeOffs/Details/5
         public ActionResult Details(int? id)
         {
@@ -53,8 +60,11 @@ namespace TimeKeepingAndPayroll.Controllers
         {
             if (ModelState.IsValid)
             {
+                Employee emp = db.Employee.Find(timeOff.EmployeeID);
+                emp.VacationDays = (timeOff.EndDate- timeOff.StartDate).Days;
                 timeOff.Approved = false;
                 db.TimeOff.Add(timeOff);
+                db.Entry(emp).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -120,6 +130,42 @@ namespace TimeKeepingAndPayroll.Controllers
             db.TimeOff.Remove(timeOff);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        // GET: TimeOffs/Approve/5
+        public ActionResult Approve(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            TimeOff timeOff = db.TimeOff.Find(id);
+            if (timeOff == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.ReplacementID = new SelectList(db.Employee.Include("Name"), "ID", "Name.FirstName");
+            return View(timeOff);
+        }
+
+        // POST: TimeOffs/Approve/5
+        [HttpPost, ActionName("Approve")]
+        [ValidateAntiForgeryToken]
+        public ActionResult ApproveRequest(TimeOff timeOff)
+        {
+            if (ModelState.IsValid)
+            {
+                TimeOff newTimeOff = db.TimeOff.Find(timeOff.ID);
+                Employee newReplacement = db.Employee.Find(timeOff.ReplacementID);
+                newTimeOff.Replacement = newReplacement;
+                newTimeOff.Approved = true;
+                db.Entry(newTimeOff).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("ManagerIndex");
+            }
+
+            ViewBag.ReplacementID = new SelectList(db.Employee.Include("Name"), "ID", "Name.FirstName");
+            return View(timeOff);
         }
 
         protected override void Dispose(bool disposing)
