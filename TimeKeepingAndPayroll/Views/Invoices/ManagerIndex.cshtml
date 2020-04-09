@@ -1,7 +1,75 @@
-﻿
+﻿@model IEnumerable<TimeKeepingAndPayroll.Models.Invoice>
+
 @{
-    ViewBag.Title = "ManagerEmployee";
+    ViewBag.Title = "Index";
 }
 
-<h2>ManagerEmployee</h2>
+<h2>Manager View</h2>
 
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Employee.EmployeeID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Employee.Name.FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Employee.Name.LastName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Employee.Role)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.HoursWorked)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PayPeriodStart)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PayPeriodEnd)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PayDate)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Employee.EmployeeID)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Employee.Name.FirstName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Employee.Name.LastName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Employee.Role)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.HoursWorked)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.PayPeriodStart)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.PayPeriodEnd)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.PayDate)
+    </td>
+    <td>
+        @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+        @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+        @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+    </td>
+</tr>
+}
+
+</table>

@@ -17,6 +17,7 @@ namespace TimeKeepingAndPayroll.Models
         public virtual FullName Name { get; set; }
         public virtual FullAddress HomeAddress { get; set; }
         public virtual FullAddress WorkAddress { get; set; }
+
         //public virtual File Picture { get; set; }
     }
 }
