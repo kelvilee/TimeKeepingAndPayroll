@@ -24,6 +24,13 @@ namespace TimeKeepingAndPayroll.Controllers
             return View(employee.ToList());
         }
 
+        // GET: Employees/ViewEmployees/id
+        public ActionResult ViewEmployees(Guid? id)
+        {
+            var employee = db.Employee.Include(e => e.Name).Where(e => e.ReportRecipientID == id);
+            return View(employee.ToList());
+        }
+
         // GET: Employees/Login
         public ActionResult Login()
         {
@@ -38,17 +45,23 @@ namespace TimeKeepingAndPayroll.Controllers
             var obj = db.Employee.Where(a => a.EmployeeID.Equals(e.EmployeeID) && a.Password.Equals(e.Password)).FirstOrDefault();
             if (obj != null)
             {
+                var lastAct = db.Attendance.Where(a => a.EmployeeID.Equals(e.EmployeeID)).OrderByDescending(a => a.Timestamp).FirstOrDefault();
+                var status = Status.OUT;
+                if (lastAct == null || lastAct.Activity.Equals(Status.OUT))
+                {
+                    status = Status.IN;
+                }
                 var attendance = new Attendance
                 {
                     Employee = obj,
                     ID = Guid.NewGuid(),
                     EmployeeID = e.EmployeeID,
                     Timestamp = DateTime.Now,
-                    Activity = Status.IN
+                    Activity = status
                 };
                 db.Attendance.Add(attendance);
                 db.SaveChanges();
-                ViewBag.Message = "Punched!";
+                ViewBag.Message = status.Equals(Status.IN) ? "Punched IN" : "Punched OUT";
                 return View();
             }
             ViewBag.Message = "Incorrect EmployeeID/Password";
