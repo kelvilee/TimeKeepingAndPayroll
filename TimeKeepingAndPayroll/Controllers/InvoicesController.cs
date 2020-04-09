@@ -23,7 +23,7 @@ namespace TimeKeepingAndPayroll.Controllers
 
         public ActionResult ManagerIndex()
         {
-            return View(db.Invoice.ToList());
+            return View(db.Invoice.Include(e => e.Employee).Include(e => e.Employee.Name).ToList());
         }
         // GET: Invoices/Details/5
         public ActionResult Details(Guid? id)
