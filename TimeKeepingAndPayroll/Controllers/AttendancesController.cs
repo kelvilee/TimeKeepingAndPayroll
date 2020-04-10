@@ -118,16 +118,20 @@ namespace TimeKeepingAndPayroll.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(attendance).State = EntityState.Modified;
-                db.SaveChanges();
-                //GMailer.GmailUsername = "batmanatbcit@gmail.com";
-                //GMailer.GmailPassword = "brucewayne123";
+                var oldTime = db.Entry(attendance).GetDatabaseValues().GetValue<DateTime>("Timestamp").ToString();
+                var oldStatus = db.Entry(attendance).GetDatabaseValues().GetValue<Status>("Activity").ToString();
+                var newTime = db.Entry(attendance).CurrentValues["Timestamp"];
+                GMailer.GmailUsername = "batmanatbcit@gmail.com";
+                GMailer.GmailPassword = "brucewayne123";
 
-                //GMailer mailer = new GMailer();
-                //mailer.ToEmail = db.Person.OfType<Employee>().Include(e => e.HomeAddress).Where(e => e.EmployeeID == attendance.EmployeeID).FirstOrDefault().HomeAddress.Email;
-                //mailer.Subject = "Your work hours have been edited";
-                //mailer.Body = "Please check your hours worked for updated hours";
-                //mailer.IsHtml = true;
-                //mailer.Send();
+                GMailer mailer = new GMailer();
+                mailer.ToEmail = db.Person.OfType<Employee>().Include(e => e.HomeAddress).Where(e => e.EmployeeID == attendance.EmployeeID).FirstOrDefault().HomeAddress.Email;
+                mailer.Subject = "MVC Health App: Your hours have been changed";
+                mailer.Body = $"<h3>Your shift has been changed from:</h3><p>{oldTime} <b>{oldStatus}</b></p>" +
+                    $"<h3>to</h3><p>{db.Entry(attendance).CurrentValues["Timestamp"]} <b>{db.Entry(attendance).CurrentValues["Activity"]}</b></p>";
+                mailer.IsHtml = true;
+                db.SaveChanges();
+                mailer.Send();
                 return RedirectToAction("EditAttendance", "Attendances", new { id = attendance.EmployeeID });
             }
             ViewBag.EmployeeID = new SelectList(db.Employee, "ID", "EmployeeID", attendance.EmployeeID);
@@ -186,7 +190,7 @@ namespace TimeKeepingAndPayroll.Controllers
         static GMailer()
         {
             GmailHost = "smtp.gmail.com";
-            GmailPort = 25; // Gmail can use ports 25, 465 & 587; but must be 25 for medium trust environment.
+            GmailPort = 587; // Gmail can use ports 25, 465 & 587; but must be 25 for medium trust environment.
             GmailSSL = true;
         }
 
