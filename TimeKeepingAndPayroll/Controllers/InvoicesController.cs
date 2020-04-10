@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using TimeKeepingAndPayroll;
@@ -59,7 +60,7 @@ namespace TimeKeepingAndPayroll.Controllers
                 invoice.ID = Guid.NewGuid();
                 db.Invoice.Add(invoice);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("ManagerIndex");
             }
 
             ViewBag.Employee_ID = new SelectList(db.Employee, "ID", "Role", invoice.Employee_ID);
@@ -132,6 +133,19 @@ namespace TimeKeepingAndPayroll.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public void Email(Guid id)
+        {
+            GMailer.GmailUsername = "batmanatbcit@gmail.com";
+            GMailer.GmailPassword = "brucewayne123";
+
+            GMailer mailer = new GMailer();
+            mailer.ToEmail = db.Person.OfType<Employee>().Include(e => e.HomeAddress).Where(e => e.ID == id).FirstOrDefault().HomeAddress.Email;
+            mailer.Subject = "Your Pay Stuf";
+            mailer.Body = "";
+            mailer.IsHtml = true;
+            mailer.Send();
         }
     }
 }

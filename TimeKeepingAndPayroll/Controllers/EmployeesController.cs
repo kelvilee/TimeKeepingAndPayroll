@@ -101,7 +101,7 @@ namespace TimeKeepingAndPayroll.Controllers
         public ActionResult Create([Bind(Include = "ID,Title,FirstName,MiddleName,LastName,NickName,MaidenName,Person")] FullName name,
             [Bind(Include = "ID,RoomNo,POBox,Unit,Floor,Wing,Building,Street,City,Province,Country,PostalCode,Cell,Phone,Fax,Email")] FullAddress homeAddress,
             [Bind(Include = "ID,RoomNo,POBox,Unit,Floor,Wing,Building,Street,City,Province,Country,PostalCode,Cell,Phone,Fax,Email")] FullAddress workAddress,
-            [Bind(Include = "ID,EmployeeID,BranchID,EmergencyContactID,ReportRecipientID,Role,JobTitle,EmploymentStatus,ReportsTo,Groups,Description,Password,PayRate")] Employee employee)
+            [Bind(Include = "ID,EmployeeID,BranchID,EmergencyContactID,ReportRecipientID,Role,JobTitle,EmploymentStatus,ReportsTo,Groups,Description,Password,PayRate,CanManageAttendance,CanManageTimeOff,CanManagePayroll")] Employee employee)
         {
             if (ModelState.IsValid)
             {
