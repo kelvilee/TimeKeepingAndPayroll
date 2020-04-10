@@ -28,6 +28,9 @@ namespace TimeKeepingAndPayroll.Models
         public string Password { get; set; }
         public int VacationDays { get; set; }
         public double PayRate { get; set; }
+        public bool canManageAttendance { get; set; }
+        public bool canManageTimeOff { get; set; }
+        public bool canManagePayroll { get; set; }
 
         public virtual Contact EmergencyContact { get; set; }
         public virtual Employee ReportRecipient { get; set; } //ReportingTo [FK] EmployeeEmergency [Drop Down List of Current Employees]
