@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -8,8 +9,8 @@ namespace TimeKeepingAndPayroll.Models
 {
     public class FullAddress
     {
+        [ForeignKey("Person")]
         public int ID { get; set; }
-
         [DisplayName("Room No")]
         public string RoomNo { get; set; }
         public string POBox { get; set; }
@@ -21,14 +22,13 @@ namespace TimeKeepingAndPayroll.Models
         public string City { get; set; }
         public string Province { get; set; }
         public string Country { get; set; }
-
         [DisplayName("Postal Code")]
         public string PostalCode { get; set; }
         public string Cell { get; set; }
         public string Phone { get; set; }
         public string Fax { get; set; }
         public string Email { get; set; }
-
         public virtual Branch Branch { get; set; }
+        public virtual Person Person { get; set; }
     }
 }

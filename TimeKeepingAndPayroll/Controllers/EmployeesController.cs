@@ -55,7 +55,6 @@ namespace TimeKeepingAndPayroll.Controllers
                 {
                     Employee = obj,
                     ID = Guid.NewGuid(),
-                    EmployeeID = e.EmployeeID,
                     Timestamp = DateTime.Now,
                     Activity = status
                 };

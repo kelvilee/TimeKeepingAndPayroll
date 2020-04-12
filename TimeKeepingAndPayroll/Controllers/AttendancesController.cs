@@ -26,14 +26,14 @@ namespace TimeKeepingAndPayroll.Controllers
         // GET: Attendances/id
         public ActionResult EditAttendance(int? id)
         {
-            var attendances = db.Attendance.Where(e => e.EmployeeID == id).OrderByDescending(t => t.Timestamp);
+            var attendances = db.Attendance.Where(e => e.Employee.EmployeeID == id).OrderByDescending(t => t.Timestamp);
             return View(attendances.ToList());
         }
 
         // GET: Attendances
         public ActionResult HoursWorked(int? id)
         {
-            var attendances = db.Attendance.Where(e => e.EmployeeID == id).OrderByDescending(t => t.Timestamp);
+            var attendances = db.Attendance.Where(e => e.Employee.EmployeeID == id).OrderByDescending(t => t.Timestamp);
             TimeSpan output = new TimeSpan(0, 0, 0);
             using (var enumerator = attendances.GetEnumerator())
             {
@@ -125,7 +125,7 @@ namespace TimeKeepingAndPayroll.Controllers
                 GMailer.GmailPassword = "brucewayne123";
 
                 GMailer mailer = new GMailer();
-                mailer.ToEmail = db.Person.OfType<Employee>().Include(e => e.HomeAddress).Where(e => e.EmployeeID == attendance.EmployeeID).FirstOrDefault().HomeAddress.Email;
+                mailer.ToEmail = db.Person.OfType<Employee>().Include(e => e.HomeAddress).Where(e => e.EmployeeID == attendance.Employee.EmployeeID).FirstOrDefault().HomeAddress.Email;
                 mailer.Subject = "MVC Health App: Your hours have been changed";
                 mailer.Body = $"<h3>Your shift has been changed from:</h3><p>{oldTime} <b>{oldStatus}</b></p>" +
                     $"<h3>to</h3><p>{db.Entry(attendance).CurrentValues["Timestamp"]} <b>{db.Entry(attendance).CurrentValues["Activity"]}</b></p>";

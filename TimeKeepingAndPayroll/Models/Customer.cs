@@ -7,7 +7,6 @@ using System.Web;
 namespace TimeKeepingAndPayroll.Models
 {
     [Table("Customer")]
-
     public class Customer : Person
     {
         public Customer()

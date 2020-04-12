@@ -33,7 +33,7 @@ namespace TimeKeepingAndPayroll.Models
         public bool canManagePayroll { get; set; }
 
         public virtual Contact EmergencyContact { get; set; }
-        public virtual Employee ReportRecipient { get; set; } //ReportingTo [FK] EmployeeEmergency [Drop Down List of Current Employees]
+        public virtual Employee ReportRecipient { get; set; }
 
         public virtual ICollection<Shift> Shifts { get; set; }
         public virtual ICollection<Attendance> AttendanceHistory { get; set; }
