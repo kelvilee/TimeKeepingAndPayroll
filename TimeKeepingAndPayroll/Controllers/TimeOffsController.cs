@@ -18,7 +18,12 @@ namespace TimeKeepingAndPayroll.Controllers
         // GET: TimeOffs
         public ActionResult Index()
         {
-            var timesOff = db.TimeOff.Include(t => t.Employee).Include(t => t.Employee.Name);
+            var timesOff = db.TimeOff.Include(t => t.Employee).Include(t => t.Employee.Name).OrderBy(t => t.StartDate);
+            var pendingRequests = db.TimeOff.Where(t => t.Approved == false)
+                .GroupBy(x => x.Approved)
+                .Select(x => new { Approved = x.Key, Requests = x.Count() })
+                .FirstOrDefault();
+            ViewBag.PendingRequests = pendingRequests.Requests;
             return View(timesOff.ToList());
         }
 
