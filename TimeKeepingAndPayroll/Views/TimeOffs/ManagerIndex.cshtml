@@ -4,7 +4,7 @@
     ViewBag.Title = "ManagerIndex";
 }
 
-<h2>Index</h2>
+<h2>Employee Requests</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -12,7 +12,7 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Employee.Role)
+            @Html.DisplayNameFor(model => model.Employee.Name)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.StartDate)
@@ -26,34 +26,40 @@
         <th>
             @Html.DisplayNameFor(model => model.Approved)
         </th>
+        <th>
+            Replacement Name
+        </th>
         <th></th>
     </tr>
 
     @foreach (var item in Model)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Employee.Role)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Reason)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Approved)
-            </td>
-            <td>
-                @Html.ActionLink("Approve", "Approve", new { id = item.ID }) |
-                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.ID })
-            </td>
-        </tr>
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Employee.Name.FirstName) @Html.DisplayFor(modelItem => item.Employee.Name.LastName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.StartDate)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.EndDate)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Reason)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Approved)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Replacement.Name.FirstName) @Html.DisplayFor(modelItem => item.Replacement.Name.LastName)
+    </td>
+    <td>
+        @Html.ActionLink("Approve", "Approve", new { id = item.ID }) |
+        @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+        @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+        @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+    </td>
+</tr>
     }
 
 </table>

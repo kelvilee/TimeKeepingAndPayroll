@@ -19,9 +19,17 @@ namespace TimeKeepingAndPayroll.Tests
         public void approveTimeOff()
         {
             m_driver = new ChromeDriver();
-            m_driver.Url = "http://localhost:51729/TimeOff/EmployeeIndex";
+            m_driver.Url = "http://localhost:51729/TimeOffs/ManagerIndex";
             m_driver.Manage().Window.Maximize();
-            IWebElement table = m_driver.FindElement(By.XPath(".//table[@class='table']"));
+            IWebElement approveRequestBtn = m_driver.FindElement(By.XPath(".//table//td//a[contains(text(),'Approve')]"));
+            approveRequestBtn.Click();
+            var employeeddl = m_driver.FindElement(By.Id("ReplacementID"));
+            var selectElement = new SelectElement(employeeddl);
+            selectElement.SelectByText("John");
+            m_driver.FindElement(By.XPath(".//input[@value='Save']")).Submit();
+
+            Assert.IsTrue(m_driver.FindElement(By.XPath(".//table//td//input[@type='checkbox']")).Selected);
+            m_driver.FindElement(By.XPath(".//table//td[contains(text(),'John Smith')]"));
             m_driver.Close();
         }
 
@@ -36,14 +44,12 @@ namespace TimeKeepingAndPayroll.Tests
             var employeeddl = m_driver.FindElement(By.Id("EmployeeID"));
             var selectElement = new SelectElement(employeeddl);
             selectElement.SelectByText("Jane");
-            m_driver.FindElement(By.Id("StartDate")).SendKeys("01/01/2020");
-            m_driver.FindElement(By.Id("EndDate")).SendKeys("01/14/2020");
+            m_driver.FindElement(By.Id("StartDate")).SendKeys("04/01/2020");
+            m_driver.FindElement(By.Id("EndDate")).SendKeys("04/10/2020");
             m_driver.FindElement(By.Id("Reason")).SendKeys("Sick");
-            m_driver.FindElement(By.XPath(".//input[@value='Create']")).Click();
+            m_driver.FindElement(By.XPath(".//input[@value='Create']")).Submit();
 
-            m_driver.FindElement(By.XPath(".//li//a[contains(text(), 'Approve Time Off')]")).Click();
-
-            m_driver.FindElement(By.XPath(".//table//td[contains(text(), '2020-01-01 12:00:00 AM')]")).Click();
+            m_driver.FindElement(By.XPath(".//table//td[contains(text(), '2020-04-01 12:00:00 AM')]")).Click();
             m_driver.Close();
 
         }
