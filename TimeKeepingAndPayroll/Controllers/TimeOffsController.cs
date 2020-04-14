@@ -18,14 +18,14 @@ namespace TimeKeepingAndPayroll.Controllers
         // GET: TimeOffs
         public ActionResult Index()
         {
-            var timesOff = db.TimeOff.Include(t => t.Employee);
+            var timesOff = db.TimeOff.Include(t => t.Employee).Include(t => t.Employee.Name);
             return View(timesOff.ToList());
         }
 
         // GET: TimeOffs
         public ActionResult ManagerIndex()
         {
-            var timesOff = db.TimeOff.Include(t => t.Employee);
+            var timesOff = db.TimeOff.Include(t => t.Employee).Include(t => t.Employee.Name).Include(t => t.Replacement.Name);
             return View(timesOff.ToList());
         }
 
