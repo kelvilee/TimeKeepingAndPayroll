@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -12,6 +13,36 @@ using TimeKeepingAndPayroll.Models;
 
 namespace TimeKeepingAndPayroll.Controllers
 {
+    [TestClass]
+    public class AttendanceControllerTest
+    {
+        [TestMethod]
+        public void TestIndexView()
+        {
+            var controller = new AttendancesController();
+            var result = controller.Index() as ViewResult;
+            Assert.AreEqual("", result.ViewName);
+
+        }
+
+        [TestMethod]
+        public void TestInvalidDetailsViewRedirect()
+        {
+            var controller = new AttendancesController();
+            var result = (HttpNotFoundResult)controller.Details(new Guid());
+            Assert.AreEqual(404, result.StatusCode);
+
+        }
+
+        [TestMethod]
+        public void TestNullDetailsViewRedirect()
+        {
+            var controller = new AttendancesController();
+            var result = (HttpStatusCodeResult)controller.Details(null);
+            Assert.AreEqual(400, result.StatusCode);
+
+        }
+    }
     public class AttendancesController : Controller
     {
         private AppContext db = new AppContext();
