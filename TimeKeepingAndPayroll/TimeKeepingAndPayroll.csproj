@@ -150,6 +150,7 @@
     <Compile Include="Models\Attendance.cs" />
     <Compile Include="Models\Branch.cs" />
     <Compile Include="Models\Contact.cs" />
+    <Compile Include="Controllers\ContactsController.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\FullAddress.cs" />
@@ -272,6 +273,11 @@
     <Content Include="Views\TimeOffs\Index.cshtml" />
     <Content Include="Views\TimeOffs\ManagerIndex.cshtml" />
     <Content Include="Views\TimeOffs\Approve.cshtml" />
+    <Content Include="Views\Contacts\Create.cshtml" />
+    <Content Include="Views\Contacts\Delete.cshtml" />
+    <Content Include="Views\Contacts\Details.cshtml" />
+    <Content Include="Views\Contacts\Edit.cshtml" />
+    <Content Include="Views\Contacts\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

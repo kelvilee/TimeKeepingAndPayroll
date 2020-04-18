@@ -19,8 +19,16 @@ namespace TimeKeepingAndPayroll.Controllers
         public ActionResult Index()
         {
             var employee = db.Employee.Include(e => e.Branch).Include(e => e.Name).Include(e => e.EmergencyContact).Include(e => e.ReportRecipient);
-            var customersPerCity = db.Person.OfType<Employee>().Include("HomeAddress").GroupBy(x => x.HomeAddress.Street).Select(x => new { Street = x.Key, Customers = x.Count() }).ToList();
-            Console.WriteLine(customersPerCity);
+            var groupedResult = db.Employee.Include(e => e.Name).ToList().GroupBy(s => s.Role);
+            string res = "";
+            foreach (var roleGroup in groupedResult)
+            {
+                res += $"Role Group: {roleGroup.Key}<br />";  //Each group has a key 
+
+                foreach (Employee e in roleGroup)  //Each group has a inner collection  
+                    res += $"Employee Name: {e.Name.FirstName} {e.Name.LastName}<br />";
+            }
+            ViewBag.Message = res;
             return View(employee.ToList());
         }
 
@@ -45,7 +53,7 @@ namespace TimeKeepingAndPayroll.Controllers
             var obj = db.Employee.Where(a => a.EmployeeID.Equals(e.EmployeeID) && a.Password.Equals(e.Password)).FirstOrDefault();
             if (obj != null)
             {
-                var lastAct = db.Attendance.Where(a => a.EmployeeID.Equals(e.EmployeeID)).OrderByDescending(a => a.Timestamp).FirstOrDefault();
+                var lastAct = db.Attendance.Where(a => a.Employee.EmployeeID.Equals(e.EmployeeID)).OrderByDescending(a => a.Timestamp).FirstOrDefault();
                 var status = Status.OUT;
                 if (lastAct == null || lastAct.Activity.Equals(Status.OUT))
                 {
@@ -87,8 +95,8 @@ namespace TimeKeepingAndPayroll.Controllers
         {
             ViewBag.BranchID = new SelectList(db.Branch, "ID", "Name");
             ViewBag.ID = new SelectList(db.FullName, "ID", "Title");
-            ViewBag.EmergencyContactID = new SelectList(db.Employee, "ID", "RelationPrimary");
-            ViewBag.ReportRecipientID = new SelectList(db.Employee, "ID", "Role");
+            ViewBag.EmergencyContactID = new SelectList(db.Contact, "ID", "RelationPrimary");
+            ViewBag.ReportRecipientID = new SelectList(db.Employee, "ID", "JobTitle");
             return View();
         }
 
@@ -97,28 +105,30 @@ namespace TimeKeepingAndPayroll.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        // Bind all values from views to the controller to input into database
         public ActionResult Create([Bind(Include = "ID,Title,FirstName,MiddleName,LastName,NickName,MaidenName,Person")] FullName name,
             [Bind(Include = "ID,RoomNo,POBox,Unit,Floor,Wing,Building,Street,City,Province,Country,PostalCode,Cell,Phone,Fax,Email")] FullAddress homeAddress,
             [Bind(Include = "ID,RoomNo,POBox,Unit,Floor,Wing,Building,Street,City,Province,Country,PostalCode,Cell,Phone,Fax,Email")] FullAddress workAddress,
-            [Bind(Include = "ID,EmployeeID,BranchID,EmergencyContactID,ReportRecipientID,Role,JobTitle,EmploymentStatus,ReportsTo,Groups,Description,Password,PayRate,CanManageAttendance,CanManageTimeOff,CanManagePayroll")] Employee employee)
+            [Bind(Include = "ID,EmployeeID,BranchID,EmergencyContactID,ReportRecipientID,Role,JobTitle,EmploymentStatus,ReportsTo," +
+            "Groups,Description,Password,PayRate,CanManageAttendance,CanManageTimeOff,CanManagePayroll")] Employee employee)
         {
             if (ModelState.IsValid)
             {
-                employee.ID = Guid.NewGuid();
-                employee.Name = name;
-                employee.HomeAddress = homeAddress;
-                employee.WorkAddress = workAddress;
-                employee.VacationDays = 15;
-                db.Person.Add(employee);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                employee.ID = Guid.NewGuid(); // Creates a new PK for Employee
+                employee.Name = name; // Binds the given name values from the FullName partial view to the Name attribute of Employee
+                employee.HomeAddress = homeAddress; // Binds the given address values from the FullAddress partial view to the HomeAddress attribute of Employee
+                employee.WorkAddress = workAddress; // Binds the given address values from the FullAddress partial view to the WorkAddress attribute of Employee
+                employee.VacationDays = 15; // sets default amount of vacation days to 15
+                db.Person.Add(employee); // add the employee ready for insertion
+                db.SaveChanges(); // commit the insertion of Employee into db
+                return RedirectToAction("Index"); // redirect to index after insertion
             }
 
             ViewBag.BranchID = new SelectList(db.Branch, "ID", "Name", employee.BranchID);
             ViewBag.ID = new SelectList(db.FullName, "ID", "Title", employee.ID);
             ViewBag.EmergencyContactID = new SelectList(db.Employee, "ID", "RelationPrimary", employee.EmergencyContactID);
             ViewBag.ReportRecipientID = new SelectList(db.Employee, "ID", "Role", employee.ReportRecipientID);
-            return View(employee);
+            return View(employee); // returns to Employee
         }
 
         // GET: Employees/Edit/5
@@ -180,9 +190,15 @@ namespace TimeKeepingAndPayroll.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
         {
-            Employee employee = (Employee)db.Person.Find(id);
-            db.Person.Remove(employee);
-            db.SaveChanges();
+            Employee employee = (Employee)db.Person.Find(id); // find the employee to delete
+            foreach (var m in db.Attendance.Where(f => f.Employee.ID == employee.ID))
+            {
+                db.Attendance.Remove(m); // for each Attendance record, if it's Employee.ID matches this employee's ID, delete it
+            }
+            FullName fname = db.FullName.Where(e => e.Person.ID == employee.ID).FirstOrDefault(); // finds the FullName associated with this employee
+            db.FullName.Remove(fname); // delete that FullName record
+            db.Person.Remove(employee); // delete the employee
+            db.SaveChanges(); // commit and save the delete
             return RedirectToAction("Index");
         }
 
