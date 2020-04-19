@@ -57,7 +57,7 @@ namespace TimeKeepingAndPayroll.Controllers
         // GET: Attendances/id
         public ActionResult EditAttendance(int? id)
         {
-            var attendances = db.Attendance.Where(e => e.Employee.EmployeeID == id).OrderByDescending(t => t.Timestamp);
+            var attendances = db.Attendance.Include(e => e.Employee).Where(e => e.Employee.EmployeeID == id).OrderByDescending(t => t.Timestamp);
             return View(attendances.ToList());
         }
 
