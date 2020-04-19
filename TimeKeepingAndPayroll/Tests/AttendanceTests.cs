@@ -21,25 +21,17 @@ namespace TimeKeepingAndPayroll.Tests
         public void startBrowser()
         {
             driver = new ChromeDriver();
-            driver.Url = "http://localhost:51729/"; // you will need to run IIS Express on another instance of VS and run these tests on this one, make sure this matches your localhost:PORT# of the running instance of IIS Express
         }
 
         [Test]
-        public void managerFixTime()
+        public void createAttendance()
         {
-            IWebElement employeeNav = driver.FindElement(By.XPath("//a[@href='/Employees']"));
-            employeeNav.Click();
-            IWebElement getEmployees = driver.FindElement(By.XPath(".//*[@class='table']//tbody/tr[2]/td[11]/a[4]"));
-            getEmployees.Click();
-            IWebElement editAttendance = driver.FindElement(By.XPath(".//*[@class='table']//tbody/tr[2]/td[7]/a[1]"));
-            editAttendance.Click();
-            IWebElement createAttendance = driver.FindElement(By.XPath("//a[@href='/Attendances/Create']"));
-            createAttendance.Click();
+            driver.Url = "http://localhost:51729/Attendances/Create";
             IWebElement eid = driver.FindElement(By.XPath(".//*[@id='EmployeeID']"));
             IWebElement time = driver.FindElement(By.XPath(".//*[@id='Timestamp']"));
             IWebElement act = driver.FindElement(By.XPath(".//*[@id='Activity']"));
             var eidSelect = new SelectElement(eid);
-            eidSelect.SelectByValue("2222");
+            eidSelect.SelectByIndex(1);
             time.SendKeys("04102020");
             time.SendKeys("0545PM");
             var ActivitySelect = new SelectElement(act);
@@ -49,16 +41,41 @@ namespace TimeKeepingAndPayroll.Tests
         }
 
         [Test]
-        public void employeePunchIn()
+        public void readAttendance()
         {
-            IWebElement loginNav = driver.FindElement(By.XPath("//a[@href='/Employees/Login']"));
-            loginNav.Click();
+            driver.Url = "http://localhost:51729/Attendances";
+            IWebElement detailsBtn = driver.FindElement(By.XPath("//a[contains(text(),'Details')]"));
+            detailsBtn.Click();
+            IWebElement backToListBtn = driver.FindElement(By.XPath("//a[contains(text(),'Back to List')]"));
+            backToListBtn.Click();
+        }
+
+        [Test]
+        public void updateAttendance()
+        {
+            driver.Url = "http://localhost:51729/Attendances";
+            IWebElement detailsBtn = driver.FindElement(By.XPath("//a[contains(text(),'Edit')]"));
+            detailsBtn.Click();
             IWebElement eid = driver.FindElement(By.XPath(".//*[@id='EmployeeID']"));
-            IWebElement pass = driver.FindElement(By.XPath(".//*[@id='Password']"));
-            eid.SendKeys("2222");
-            pass.SendKeys("123");
-            IWebElement loginBtn = driver.FindElement(By.XPath(".//*[@class='btn btn-default']"));
-            loginBtn.Click();
+            IWebElement time = driver.FindElement(By.XPath(".//*[@id='Timestamp']"));
+            IWebElement act = driver.FindElement(By.XPath(".//*[@id='Activity']"));
+            var eidSelect = new SelectElement(eid);
+            eidSelect.SelectByIndex(1);
+            time.SendKeys("05102020");
+            time.SendKeys("0745PM");
+            var ActivitySelect = new SelectElement(act);
+            ActivitySelect.SelectByIndex(1);
+            IWebElement createBtn = driver.FindElement(By.XPath(".//*[@class='btn btn-default']"));
+            createBtn.Click();
+        }
+
+        [Test]
+        public void deleteAttendance()
+        {
+            driver.Url = "http://localhost:51729/Attendances";
+            IWebElement deleteBtn = driver.FindElement(By.XPath("//a[contains(text(),'Delete')]"));
+            deleteBtn.Click();
+            driver.FindElement(By.XPath(".//input[@value='Delete']")).Click();
         }
 
         [TearDown]
