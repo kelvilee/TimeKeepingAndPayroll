@@ -7,13 +7,12 @@ using System.Web;
 namespace TimeKeepingAndPayroll.Models
 {
     [Table("Customer")]
-
     public class Customer : Person
     {
         public Customer()
         {
-            Contacts = new HashSet<Person>();
+            Contacts = new HashSet<Contact>();
         }
-        public virtual ICollection<Person> Contacts { get; set; }
+        public virtual ICollection<Contact> Contacts { get; set; }
     }
 }

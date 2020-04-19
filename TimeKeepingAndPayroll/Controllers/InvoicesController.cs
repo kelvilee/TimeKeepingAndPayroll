@@ -148,7 +148,7 @@ namespace TimeKeepingAndPayroll.Controllers
             Invoice invoice = db.Invoice.Find(id);
             db.Invoice.Remove(invoice);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("ManagerIndex");
         }
 
         protected override void Dispose(bool disposing)
@@ -167,19 +167,20 @@ namespace TimeKeepingAndPayroll.Controllers
 
             GMailer mailer = new GMailer();
             mailer.ToEmail = db.Person.OfType<Employee>().Include(e => e.HomeAddress).Where(e => e.ID == id).FirstOrDefault().HomeAddress.Email;
-            mailer.Subject = "Your Pay Stuf";
+            mailer.Subject = "Your Pay Stub";
             mailer.Body = "";
             mailer.IsHtml = true;
             mailer.Send();
+
+            RedirectToAction("EmployeeIndex");
         }
 
 
         // GET: Attendances
         public double calculateHoursWorked(Guid id, DateTime start, DateTime end)
         {
-            var attendances = db.Attendance.Include(e => e.Employee).Where(e => e.Employee.ID == id);
-                //.Where(e => DbFunctions.TruncateTime(e.Timestamp) >= DbFunctions.TruncateTime(start)).
-                //Where(e => DbFunctions.TruncateTime(e.Timestamp) <= DbFunctions.TruncateTime(end));
+            var attendances = db.Attendance.Include(e => e.Employee).Where(e => e.Employee.ID == id).Where(e => DbFunctions.TruncateTime(e.Timestamp) >= DbFunctions.TruncateTime(start)).
+                Where(e => DbFunctions.TruncateTime(e.Timestamp) <= DbFunctions.TruncateTime(end));
             TimeSpan output = new TimeSpan(0, 0, 0);
             using (var enumerator = attendances.GetEnumerator())
             {
@@ -190,7 +191,7 @@ namespace TimeKeepingAndPayroll.Controllers
                         break;
 
                     var stop = enumerator.Current.Timestamp;
-                    output += (begin - stop);
+                    output += (stop - begin);
                 }
             }
             return output.TotalHours;
