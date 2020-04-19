@@ -81,15 +81,15 @@
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
                 @Html.ActionLink("Details", "Details", new { id = item.ID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.ID }) |
-                @if (item.Role == "Manager")
-                {
-                    @Html.ActionLink("Employees", "ViewEmployees", new { id = item.ID })
-                }
-                else
-                {
-                    @Html.ActionLink("Hours", "HoursWorked", "Attendances", new { id = item.EmployeeID }, null)
-                }
+                @Html.ActionLink("Delete", "Delete", new { id = item.ID }) @*|
+                    @if (item.Role == "Manager")
+                    {
+                        @Html.ActionLink("Employees", "ViewEmployees", new { id = item.ID })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Hours", "HoursWorked", "Attendances", new { id = item.EmployeeID }, null)
+                    }*@
             </td>
         </tr>
     }

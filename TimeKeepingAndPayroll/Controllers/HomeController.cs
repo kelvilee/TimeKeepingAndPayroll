@@ -13,7 +13,7 @@ namespace TimeKeepingAndPayroll.Controllers
         private AppContext db = new AppContext();
         public ActionResult Index()
         {
-            if(Session["Name"] != null)
+            if (Session["Name"] != null)
             {
                 return RedirectToAction("Index", "Employees");
             }
@@ -22,7 +22,9 @@ namespace TimeKeepingAndPayroll.Controllers
 
         public ActionResult Logout()
         {
+            Session["Manager"] = false;
             Session["Name"] = null;
+            Session["ID"] = null;
             return View("Index");
         }
 
@@ -35,11 +37,18 @@ namespace TimeKeepingAndPayroll.Controllers
             if (obj != null)
             {
                 // login success
+                if(obj.Role == "Manager")
+                {
+                    Session["Manager"] = true;
+                }
                 Session["Name"] = obj.EmployeeID;
-                return RedirectToAction("Index", "Employees");
+                Session["ID"] = obj.ID;
+                return RedirectToAction("HoursWorked", "Attendances", new { id = obj.EmployeeID });
             }
             // login fail
+            Session["Manager"] = false;
             Session["Name"] = null;
+            Session["ID"] = null;
             ViewBag.Message = "Incorrect EmployeeID/Password";
             return View("Index");
         }

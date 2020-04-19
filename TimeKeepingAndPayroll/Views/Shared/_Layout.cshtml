@@ -29,15 +29,26 @@
                         <li>@Html.ActionLink("Login", "Index", "Home")</li>
                     }
                     <li>@Html.ActionLink("Punch In", "Login", "Employees")</li>
-                    <li>@Html.ActionLink("Employee", "Index", "Employees")</li>
-                    <li>@Html.ActionLink("Attendance", "Index", "Attendances")</li>
+                    @if (Session["Name"] != null)
+                    {
+                        if ((bool)Session["Manager"])
+                        {
+                            <li>@Html.ActionLink("Employees", "ViewEmployees", "Employees", new { id = Session["ID"] }, null)</li>
+                        }
+                        <li>@Html.ActionLink("Hours", "HoursWorked", "Attendances", new { id = Session["Name"] }, null)</li>
+                    }
+                    else
+                    {
+                        <li>@Html.ActionLink("Employee", "Index", "Employees")</li>
+                        <li>@Html.ActionLink("Attendance", "Index", "Attendances")</li>
+                    }
                     <li>@Html.ActionLink("Request Time Off", "Index", "TimeOffs")</li>
                     <li>@Html.ActionLink("Approve Time Off", "ManagerIndex", "TimeOffs")</li>
                     <li>@Html.ActionLink("Payroll", "EmployeeIndex", "Invoices")</li>
                     <li>@Html.ActionLink("Manage Payroll", "ManagerIndex", "Invoices")</li>
                     @if (Session["Name"] != null)
                     {
-                        <li>@Html.ActionLink($"Logout of EID#{Session["Name"]}", "Logout", "Home")</li>
+                        <li>@Html.ActionLink($"Logout of EID#{Session["Name"]}", "Logout", "Home", "HomeController", new { @style = "color: #dd0000;" })</li>
                     }
                 </ul>
             </div>
