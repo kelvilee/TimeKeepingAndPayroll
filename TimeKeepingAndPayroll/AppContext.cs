@@ -9,7 +9,7 @@ namespace TimeKeepingAndPayroll
 {
     public class AppContext : DbContext
     {
-        public AppContext() : base("TestTimeKeepingDB2")
+        public AppContext() : base("timekeepingdb")
         {
             Database.SetInitializer<AppContext>(new AppDBInitializer());
             this.Configuration.LazyLoadingEnabled = false;
@@ -27,7 +27,7 @@ namespace TimeKeepingAndPayroll
         public DbSet<Shift> Shift { get; set; }
         public DbSet<TimeOff> TimeOff { get; set; }
     }
-    public class AppDBInitializer : DropCreateDatabaseIfModelChanges<AppContext>
+    public class AppDBInitializer : CreateDatabaseIfNotExists<AppContext>
     {
         protected override void Seed(AppContext context)
         {
