@@ -109,6 +109,7 @@ namespace TimeKeepingAndPayroll.Controllers
                 employee.HomeAddress = homeAddress; // Binds the given address values from the FullAddress partial view to the HomeAddress attribute of Employee
                 employee.WorkAddress = workAddress; // Binds the given address values from the FullAddress partial view to the WorkAddress attribute of Employee
                 employee.VacationDays = 15; // sets default amount of vacation days to 15
+                employee.startDate = DateTime.Now;
                 db.Person.Add(employee); // add the employee ready for insertion
                 db.SaveChanges(); // commit the insertion of Employee into db
                 return RedirectToAction("Index"); // redirect to index after insertion

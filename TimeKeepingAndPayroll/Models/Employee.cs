@@ -31,6 +31,7 @@ namespace TimeKeepingAndPayroll.Models
         public int VacationDays { get; set; }
         [Range(0, 999999)]
         public double PayRate { get; set; }
+        public DateTime startDate { get; set; }
         public bool canManageAttendance { get; set; }
         public bool canManageTimeOff { get; set; }
         public bool canManagePayroll { get; set; }
