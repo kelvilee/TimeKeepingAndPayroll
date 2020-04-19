@@ -40,6 +40,9 @@ namespace TimeKeepingAndPayroll.Controllers
                 if(obj.Role == "Manager")
                 {
                     Session["Manager"] = true;
+                } else
+                {
+                    Session["Manager"] = false;
                 }
                 Session["Name"] = obj.EmployeeID;
                 Session["ID"] = obj.ID;

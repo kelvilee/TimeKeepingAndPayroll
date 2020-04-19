@@ -18,14 +18,41 @@ namespace TimeKeepingAndPayroll.Controllers
         // GET: TimeOffs
         public ActionResult Index()
         {
-            var timesOff = db.TimeOff.Include(t => t.Employee);
+            if (Session["ID"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            var id = Guid.Parse(Session["ID"].ToString());
+            var timesOff = db.TimeOff.Include(t => t.Employee).Include(t => t.Employee.Name).Where(t => t.Employee.ID == id).OrderByDescending(t => t.StartDate);
+            var pendingRequests = db.TimeOff.Where(t => t.Approved == false)
+                .GroupBy(x => x.Approved)
+                .Select(x => new { Approved = x.Key, Requests = x.Count() })
+                .FirstOrDefault();
+            ViewBag.RemainingVacationDays = db.Employee.Find(Session["ID"]).VacationDays;
+            if(pendingRequests == null)
+            {
+                ViewBag.PendingRequests = 0;
+            } else
+            {
+                ViewBag.PendingRequests = pendingRequests.Requests;
+            }
             return View(timesOff.ToList());
         }
 
         // GET: TimeOffs
         public ActionResult ManagerIndex()
         {
-            var timesOff = db.TimeOff.Include(t => t.Employee);
+            if (Session["ID"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            var id = Guid.Parse(Session["ID"].ToString());
+            if (db.Person.OfType<Employee>().Where(t => t.ID == id).FirstOrDefault().canManageTimeOff != true)
+            {
+                TempData["AlertMessage"] = "You cannot manage times off. No sufficient permissions.";
+                return RedirectToAction("Index");
+            }
+            var timesOff = db.TimeOff.Include(t => t.Employee).Include(t => t.Employee.Name).Include(t => t.Replacement.Name);
             return View(timesOff.ToList());
         }
 
@@ -47,7 +74,13 @@ namespace TimeKeepingAndPayroll.Controllers
         // GET: TimeOffs/Create
         public ActionResult Create()
         {
-            ViewBag.EmployeeID = new SelectList(db.Employee.Include("Name"), "ID", "Name.FirstName");
+            if(Session["ID"] == null)
+            {
+                return RedirectToAction("Index","Home");
+            }
+            var id = Guid.Parse(Session["ID"].ToString());
+            var emp = db.Employee.Include("Name").Where(t => t.ID == id);
+            ViewBag.EmployeeID = new SelectList(emp, "ID", "Name.FirstName");
             return View();
         }
 
@@ -60,8 +93,8 @@ namespace TimeKeepingAndPayroll.Controllers
         {
             if (ModelState.IsValid)
             {
-                Employee emp = db.Employee.Find(timeOff.EmployeeID);
-                emp.VacationDays = (timeOff.EndDate- timeOff.StartDate).Days;
+                Employee emp = db.Employee.Find(Session["ID"]);
+                emp.VacationDays -= (timeOff.EndDate - timeOff.StartDate).Days;
                 timeOff.Approved = false;
                 db.TimeOff.Add(timeOff);
                 db.Entry(emp).State = EntityState.Modified;
@@ -76,6 +109,10 @@ namespace TimeKeepingAndPayroll.Controllers
         // GET: TimeOffs/Edit/5
         public ActionResult Edit(int? id)
         {
+            if (Session["ID"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -85,7 +122,9 @@ namespace TimeKeepingAndPayroll.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.EmployeeID = new SelectList(db.Employee.Include("Name"), "ID", "Name.FirstName");
+            var curId = Guid.Parse(Session["ID"].ToString());
+            var emp = db.Employee.Include("Name").Where(t => t.ID == curId);
+            ViewBag.EmployeeID = new SelectList(emp, "ID", "Name.FirstName");
             return View(timeOff);
         }
 
@@ -127,6 +166,9 @@ namespace TimeKeepingAndPayroll.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             TimeOff timeOff = db.TimeOff.Find(id);
+            Employee emp = db.Employee.Find(Session["ID"]);
+            emp.VacationDays += (timeOff.EndDate - timeOff.StartDate).Days;
+            db.Entry(emp).State = EntityState.Modified;
             db.TimeOff.Remove(timeOff);
             db.SaveChanges();
             return RedirectToAction("Index");
@@ -135,6 +177,10 @@ namespace TimeKeepingAndPayroll.Controllers
         // GET: TimeOffs/Approve/5
         public ActionResult Approve(int? id)
         {
+            if (Session["ID"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -144,7 +190,7 @@ namespace TimeKeepingAndPayroll.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ReplacementID = new SelectList(db.Employee.Include("Name"), "ID", "Name.FirstName");
+            ViewBag.ReplacementID = new SelectList(db.Employee.Include("Name").Where(t => t.ID != timeOff.EmployeeID).OrderByDescending(t => t.startDate), "ID", "Name.FirstName");
             return View(timeOff);
         }
 
@@ -164,7 +210,9 @@ namespace TimeKeepingAndPayroll.Controllers
                 return RedirectToAction("ManagerIndex");
             }
 
-            ViewBag.ReplacementID = new SelectList(db.Employee.Include("Name"), "ID", "Name.FirstName");
+            var curId = Guid.Parse(Session["ID"].ToString());
+
+            ViewBag.ReplacementID = new SelectList(db.Employee.Include("Name").Where(t => t.ID != curId).OrderByDescending(t => t.startDate), "ID", "Name.FirstName");
             return View(timeOff);
         }
 
