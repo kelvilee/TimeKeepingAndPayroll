@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -12,6 +13,36 @@ using TimeKeepingAndPayroll.Models;
 
 namespace TimeKeepingAndPayroll.Controllers
 {
+    [TestClass]
+    public class AttendanceControllerTest
+    {
+        [TestMethod]
+        public void TestIndexView()
+        {
+            var controller = new AttendancesController();
+            var result = controller.Index() as ViewResult;
+            Assert.AreEqual("", result.ViewName);
+
+        }
+
+        [TestMethod]
+        public void TestInvalidDetailsViewRedirect()
+        {
+            var controller = new AttendancesController();
+            var result = (HttpNotFoundResult)controller.Details(new Guid());
+            Assert.AreEqual(404, result.StatusCode);
+
+        }
+
+        [TestMethod]
+        public void TestNullDetailsViewRedirect()
+        {
+            var controller = new AttendancesController();
+            var result = (HttpStatusCodeResult)controller.Details(null);
+            Assert.AreEqual(400, result.StatusCode);
+
+        }
+    }
     public class AttendancesController : Controller
     {
         private AppContext db = new AppContext();
@@ -26,14 +57,14 @@ namespace TimeKeepingAndPayroll.Controllers
         // GET: Attendances/id
         public ActionResult EditAttendance(int? id)
         {
-            var attendances = db.Attendance.Where(e => e.EmployeeID == id).OrderByDescending(t => t.Timestamp);
+            var attendances = db.Attendance.Where(e => e.Employee.EmployeeID == id).OrderByDescending(t => t.Timestamp);
             return View(attendances.ToList());
         }
 
         // GET: Attendances
         public ActionResult HoursWorked(int? id)
         {
-            var attendances = db.Attendance.Where(e => e.EmployeeID == id).OrderByDescending(t => t.Timestamp);
+            var attendances = db.Attendance.Where(e => e.Employee.EmployeeID == id).OrderByDescending(t => t.Timestamp);
             TimeSpan output = new TimeSpan(0, 0, 0);
             using (var enumerator = attendances.GetEnumerator())
             {
@@ -69,8 +100,9 @@ namespace TimeKeepingAndPayroll.Controllers
         // GET: Attendances/Create
         public ActionResult Create()
         {
-            ViewBag.EmployeeID = new SelectList(db.Employee, "EmployeeID", "EmployeeID");
-            return View();
+            // populates DropDownList with EmployeeID numbers from Employee
+            ViewBag.EmployeeID = new SelectList(db.Employee, "ID", "EmployeeID");
+            return View(); // Renders Create view
         }
 
         // POST: Attendances/Create
@@ -78,34 +110,35 @@ namespace TimeKeepingAndPayroll.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        // Binds the EmployeeID, Timestamp and Activity values from the view to the controller
         public ActionResult Create([Bind(Include = "ID,EmployeeID,Timestamp,Activity")] Attendance attendance)
         {
             if (ModelState.IsValid)
             {
-                attendance.ID = Guid.NewGuid();
-                db.Attendance.Add(attendance);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                attendance.ID = Guid.NewGuid(); // Creates a new ID as PK for Attendance table
+                db.Attendance.Add(attendance); // Add the attendace to be inserted
+                db.SaveChanges(); // Commits the insertion of Attendance record to DB
+                return RedirectToAction("Index"); // redirect to Index view of Attendance
             }
 
-            ViewBag.EmployeeID = new SelectList(db.Employee, "ID", "EmployeeID", attendance.EmployeeID);
-            return View(attendance);
+            ViewBag.EmployeeID = new SelectList(db.Employee, "ID", "EmployeeID", attendance.EmployeeID); // populates dropdown list with EmployeeID
+            return View(attendance); // Render the Create view with the previously entered data populated
         }
 
         // GET: Attendances/Edit/5
         public ActionResult Edit(Guid? id)
         {
-            if (id == null)
+            if (id == null) // null id returns HTTP 400
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Attendance attendance = db.Attendance.Find(id);
-            if (attendance == null)
+            Attendance attendance = db.Attendance.Find(id); // find the Attendance record associated with the id
+            if (attendance == null) // return HttpNotFound if attendance is null
             {
                 return HttpNotFound();
             }
-            ViewBag.EmployeeID = new SelectList(db.Employee, "EmployeeID", "EmployeeID", attendance.EmployeeID);
-            return View(attendance);
+            ViewBag.EmployeeID = new SelectList(db.Employee, "ID", "EmployeeID", attendance.EmployeeID); // populates dropdown list with EmployeeID
+            return View(attendance); // render Edit view with selected Attendance attributes
         }
 
         // POST: Attendances/Edit/5
@@ -113,44 +146,45 @@ namespace TimeKeepingAndPayroll.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        // Binds the Edit views values to controller
         public ActionResult Edit([Bind(Include = "ID,EmployeeID,Timestamp,Activity")] Attendance attendance)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(attendance).State = EntityState.Modified;
-                var oldTime = db.Entry(attendance).GetDatabaseValues().GetValue<DateTime>("Timestamp").ToString();
-                var oldStatus = db.Entry(attendance).GetDatabaseValues().GetValue<Status>("Activity").ToString();
-                var newTime = db.Entry(attendance).CurrentValues["Timestamp"];
-                GMailer.GmailUsername = "batmanatbcit@gmail.com";
-                GMailer.GmailPassword = "brucewayne123";
+                db.Entry(attendance).State = EntityState.Modified; // Sets the state of the entry as Modified
+                var oldTime = db.Entry(attendance).GetDatabaseValues().GetValue<DateTime>("Timestamp").ToString(); // gets the old timestamp
+                var oldStatus = db.Entry(attendance).GetDatabaseValues().GetValue<Status>("Activity").ToString(); // gets the old activity
+                var newTime = db.Entry(attendance).CurrentValues["Timestamp"]; // gets the new timestamp
+                GMailer.GmailUsername = "batmanatbcit@gmail.com"; // gmail sender credentials
+                GMailer.GmailPassword = "brucewayne123"; // gmail sender credentials
 
-                GMailer mailer = new GMailer();
-                mailer.ToEmail = db.Person.OfType<Employee>().Include(e => e.HomeAddress).Where(e => e.EmployeeID == attendance.EmployeeID).FirstOrDefault().HomeAddress.Email;
-                mailer.Subject = "MVC Health App: Your hours have been changed";
+                GMailer mailer = new GMailer(); // instance of customer mailer class
+                mailer.ToEmail = db.Person.OfType<Employee>().Include(e => e.HomeAddress).Where(e => e.ID == attendance.EmployeeID).FirstOrDefault().HomeAddress.Email; // gets the email of employee associated with attendance record
+                mailer.Subject = "MVC Health App: Your hours have been changed"; // subject of email
                 mailer.Body = $"<h3>Your shift has been changed from:</h3><p>{oldTime} <b>{oldStatus}</b></p>" +
-                    $"<h3>to</h3><p>{db.Entry(attendance).CurrentValues["Timestamp"]} <b>{db.Entry(attendance).CurrentValues["Activity"]}</b></p>";
+                    $"<h3>to</h3><p>{db.Entry(attendance).CurrentValues["Timestamp"]} <b>{db.Entry(attendance).CurrentValues["Activity"]}</b></p>"; // email contents
                 mailer.IsHtml = true;
-                db.SaveChanges();
-                mailer.Send();
-                return RedirectToAction("EditAttendance", "Attendances", new { id = attendance.EmployeeID });
+                db.SaveChanges(); // saves the modified attendance
+                mailer.Send(); // send email to employee of modified attendance
+                return RedirectToAction("Index"); // redirect to Index view of Attendance
             }
-            ViewBag.EmployeeID = new SelectList(db.Employee, "ID", "EmployeeID", attendance.EmployeeID);
-            return View(attendance);
+            ViewBag.EmployeeID = new SelectList(db.Employee, "ID", "EmployeeID", attendance.EmployeeID); // populates dropdown list with EmployeeI
+            return View(attendance); // render Edit view with selected Attendance attributes
         }
 
         // GET: Attendances/Delete/5
         public ActionResult Delete(Guid? id)
         {
-            if (id == null)
+            if (id == null) // null id returns HTTP 400
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Attendance attendance = db.Attendance.Find(id);
-            if (attendance == null)
+            Attendance attendance = db.Attendance.Find(id); // find the Attendance record associated with the id
+            if (attendance == null) // return HttpNotFound if attendance is null
             {
                 return HttpNotFound();
             }
-            return View(attendance);
+            return View(attendance); // render Delete view with selected Attendance attributes
         }
 
         // POST: Attendances/Delete/5
@@ -158,10 +192,10 @@ namespace TimeKeepingAndPayroll.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid? id)
         {
-            Attendance attendance = db.Attendance.Find(id);
-            db.Attendance.Remove(attendance);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            Attendance attendance = db.Attendance.Find(id); // Find the attendance record associated with the ID passed in
+            db.Attendance.Remove(attendance); // remove the attendance record
+            db.SaveChanges(); // commit the delete of the attendance row
+            return RedirectToAction("Index"); // redirect to Index of Attendance
         }
 
         protected override void Dispose(bool disposing)

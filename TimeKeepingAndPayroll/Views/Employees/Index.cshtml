@@ -6,6 +6,8 @@
 
 <h2>Index</h2>
 
+
+@Html.Raw(@ViewBag.Message)
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
@@ -43,52 +45,53 @@
         </th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name.FirstName)
-            @Html.DisplayFor(modelItem => item.Name.LastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Role)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.JobTitle)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EmploymentStatus)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Password)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PayRate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.VacationDays)
-        </td>
-        <td></td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ReportRecipient.Name.FirstName)
-            @Html.DisplayFor(modelItem => item.ReportRecipient.Name.LastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ReportRecipient.Role)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id = item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.ID }) |
-            @if (item.Role == "Manager")
-            {
-                @Html.ActionLink("Employees", "ViewEmployees", new { id = item.ID })
-            }
-            else
-            {
-                @Html.ActionLink("Hours", "HoursWorked", "Attendances", new { id = item.EmployeeID }, null)
-            }
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name.FirstName)
+                @Html.DisplayFor(modelItem => item.Name.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JobTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmploymentStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Password)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PayRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VacationDays)
+            </td>
+            <td></td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReportRecipient.Name.FirstName)
+                @Html.DisplayFor(modelItem => item.ReportRecipient.Name.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReportRecipient.Role)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ID }) |
+                @if (item.Role == "Manager")
+                {
+                    @Html.ActionLink("Employees", "ViewEmployees", new { id = item.ID })
+                }
+                else
+                {
+                    @Html.ActionLink("Hours", "HoursWorked", "Attendances", new { id = item.EmployeeID }, null)
+                }
+            </td>
+        </tr>
+    }
 
 </table>
