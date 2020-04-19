@@ -24,7 +24,7 @@ namespace TimeKeepingAndPayroll.Controllers
             }
             var id = Guid.Parse(Session["ID"].ToString());
             var timesOff = db.TimeOff.Include(t => t.Employee).Include(t => t.Employee.Name).Where(t => t.Employee.ID == id).OrderByDescending(t => t.StartDate);
-            var pendingRequests = db.TimeOff.Where(t => t.Approved == false)
+            var pendingRequests = db.TimeOff.Where(t => t.Employee.ID == id).Where(t => t.Approved == false)
                 .GroupBy(x => x.Approved)
                 .Select(x => new { Approved = x.Key, Requests = x.Count() })
                 .FirstOrDefault();
