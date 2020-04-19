@@ -19,16 +19,6 @@ namespace TimeKeepingAndPayroll.Controllers
         public ActionResult Index()
         {
             var employee = db.Employee.Include(e => e.Branch).Include(e => e.Name).Include(e => e.EmergencyContact).Include(e => e.ReportRecipient);
-            var groupedResult = db.Employee.Include(e => e.Name).ToList().GroupBy(s => s.Role);
-            string res = "";
-            foreach (var roleGroup in groupedResult)
-            {
-                res += $"Role Group: {roleGroup.Key}<br />";  //Each group has a key 
-
-                foreach (Employee e in roleGroup)  //Each group has a inner collection  
-                    res += $"Employee Name: {e.Name.FirstName} {e.Name.LastName}<br />";
-            }
-            ViewBag.Message = res;
             return View(employee.ToList());
         }
 
