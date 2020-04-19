@@ -271,6 +271,7 @@
     <Content Include="Views\TimeOffs\Index.cshtml" />
     <Content Include="Views\TimeOffs\ManagerIndex.cshtml" />
     <Content Include="Views\TimeOffs\Approve.cshtml" />
+    <Content Include="Views\Invoices\CreateSelectDates.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

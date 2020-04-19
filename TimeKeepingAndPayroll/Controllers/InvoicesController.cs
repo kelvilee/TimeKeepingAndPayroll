@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -41,12 +43,35 @@ namespace TimeKeepingAndPayroll.Controllers
             return View(invoice);
         }
 
-        // GET: Invoices/Create
-        public ActionResult Create()
+        public ActionResult CreateSelectDates()
         {
-            ViewBag.Employee_ID = new SelectList(db.Person.OfType<Employee>(), "ID", "Role");
+            ViewBag.Employee_ID = new SelectList(db.Person.OfType<Employee>(), "ID", "EmployeeID");
             return View();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateSelectDates([Bind(Include = "Employee_ID, PayPeriodStart, PayPeriodEnd")] Invoice invoice)
+        {
+            return RedirectToAction("Create", new
+            {
+                invoice.Employee_ID,
+                invoice.PayPeriodStart,
+                invoice.PayPeriodEnd,
+            });
+        }
+
+        public ActionResult Create(Guid Employee_ID, DateTime PayPeriodStart, DateTime PayPeriodEnd)
+        {
+            ViewBag.Employee_ID = Employee_ID;
+            ViewBag.PayPeriodStart = PayPeriodStart;
+            ViewBag.PayPeriodEnd = PayPeriodEnd;
+            ViewBag.PayDate = DateTime.Now;
+            ViewBag.HoursWorked = calculateHoursWorked(Employee_ID, PayPeriodStart, PayPeriodEnd);
+            ViewBag.TotalAmount = db.Person.OfType<Employee>().Where(e => e.ID == Employee_ID).FirstOrDefault().PayRate * ViewBag.HoursWorked;
+            return View();
+        }
+
 
         // POST: Invoices/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -63,7 +88,7 @@ namespace TimeKeepingAndPayroll.Controllers
                 return RedirectToAction("ManagerIndex");
             }
 
-            ViewBag.Employee_ID = new SelectList(db.Employee, "ID", "Role", invoice.Employee_ID);
+            ViewBag.Employee_ID = new SelectList(db.Employee, "ID", "EmployeeID", invoice.Employee_ID);
             return View(invoice);
         }
 
@@ -146,6 +171,29 @@ namespace TimeKeepingAndPayroll.Controllers
             mailer.Body = "";
             mailer.IsHtml = true;
             mailer.Send();
+        }
+
+
+        // GET: Attendances
+        public double calculateHoursWorked(Guid id, DateTime start, DateTime end)
+        {
+            var attendances = db.Attendance.Include(e => e.Employee).Where(e => e.Employee.ID == id);
+                //.Where(e => DbFunctions.TruncateTime(e.Timestamp) >= DbFunctions.TruncateTime(start)).
+                //Where(e => DbFunctions.TruncateTime(e.Timestamp) <= DbFunctions.TruncateTime(end));
+            TimeSpan output = new TimeSpan(0, 0, 0);
+            using (var enumerator = attendances.GetEnumerator())
+            {
+                while (enumerator.MoveNext())
+                {
+                    var begin = enumerator.Current.Timestamp;
+                    if (!enumerator.MoveNext())
+                        break;
+
+                    var stop = enumerator.Current.Timestamp;
+                    output += (begin - stop);
+                }
+            }
+            return output.TotalHours;
         }
     }
 }
