@@ -31,16 +31,17 @@ namespace TimeKeepingAndPayroll.Tests
             m_driver = new ChromeDriver();
             m_driver.Url = "http://localhost:51729/Invoices/ManagerIndex";
             m_driver.Manage().Window.Maximize();
-            IWebElement createNewInvoiceBtn = m_driver.FindElement(By.XPath(".//a[contains(text(),'Create')]"));
+            IWebElement createNewInvoiceBtn = m_driver.FindElement(By.XPath("//a[contains(text(),'Create')]"));
             createNewInvoiceBtn.Click();
             var employeeddl = m_driver.FindElement(By.Id("Employee_ID"));
             var selectElement = new SelectElement(employeeddl);
-            selectElement.SelectByText("Manager");
-            m_driver.FindElement(By.Id("HoursWorked")).SendKeys("40");
+            selectElement.SelectByText("1");
+
             m_driver.FindElement(By.Id("PayPeriodStart")).SendKeys("01/01/2020");
             m_driver.FindElement(By.Id("PayPeriodEnd")).SendKeys("01/14/2020");
-            m_driver.FindElement(By.Id("PayDate")).SendKeys("01/17/2020");
-            m_driver.FindElement(By.Id("TotalAmount")).SendKeys("1600");
+
+            m_driver.FindElement(By.XPath("//input[@value='Continue']")).Click();
+
             m_driver.FindElement(By.Id("IncomeTax")).SendKeys("300");
             m_driver.FindElement(By.Id("CPP")).SendKeys("30");
             m_driver.FindElement(By.Id("IE")).SendKeys("30");

@@ -6,10 +6,10 @@
 
 <h2>Create</h2>
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Invoice</h4>
         <hr />
@@ -17,15 +17,14 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Employee_ID, "Employee_ID", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("Employee_ID", null, "Select...", htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Employee_ID, "", new { @class = "text-danger" })
+                @ViewBag.Employee_ID
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.HoursWorked, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.HoursWorked, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.HoursWorked, new { htmlAttributes = new { @Value = ViewBag.HoursWorked } })
                 @Html.ValidationMessageFor(model => model.HoursWorked, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -33,7 +32,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PayPeriodStart, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PayPeriodStart, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.PayPeriodStart, new { htmlAttributes = new { @class = "form-control datepicker" } })
                 @Html.ValidationMessageFor(model => model.PayPeriodStart, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -41,7 +40,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PayPeriodEnd, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PayPeriodEnd, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.PayPeriodEnd, new { htmlAttributes = new { @class = "form-control datepicker" } })
                 @Html.ValidationMessageFor(model => model.PayPeriodEnd, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -49,7 +48,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PayDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PayDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.PayDate, new { htmlAttributes = new { @Value = ViewBag.PayDate } })
                 @Html.ValidationMessageFor(model => model.PayDate, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -57,7 +56,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.TotalAmount, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.TotalAmount, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.TotalAmount, new { htmlAttributes = new { @Value = ViewBag.TotalAmount } })
                 @Html.ValidationMessageFor(model => model.TotalAmount, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -113,3 +112,14 @@
 <div>
     @Html.ActionLink("Back to List", "ManagerIndex")
 </div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryui")
+    <script type="text/javascript">
+        $(function () { // will trigger when the document is ready
+            $('.datepicker').datepicker(); //Initialise any date pickers
+        });
+    </script>
+}
