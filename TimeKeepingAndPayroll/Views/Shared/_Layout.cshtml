@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title</title>
 
     @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">*@
 
@@ -20,18 +20,25 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("TimeKeepingAndPayroll", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Login", "Login", "Employees")</li>
+                    @if (Session["Name"] == null)
+                    {
+                        <li>@Html.ActionLink("Login", "Index", "Home")</li>
+                    }
+                    <li>@Html.ActionLink("Punch In", "Login", "Employees")</li>
                     <li>@Html.ActionLink("Employee", "Index", "Employees")</li>
                     <li>@Html.ActionLink("Attendance", "Index", "Attendances")</li>
                     <li>@Html.ActionLink("Request Time Off", "Index", "TimeOffs")</li>
                     <li>@Html.ActionLink("Approve Time Off", "ManagerIndex", "TimeOffs")</li>
                     <li>@Html.ActionLink("Payroll", "EmployeeIndex", "Invoices")</li>
                     <li>@Html.ActionLink("Manage Payroll", "ManagerIndex", "Invoices")</li>
+                    @if (Session["Name"] != null)
+                    {
+                        <li>@Html.ActionLink($"Logout of EID#{Session["Name"]}", "Logout", "Home")</li>
+                    }
                 </ul>
             </div>
         </div>
