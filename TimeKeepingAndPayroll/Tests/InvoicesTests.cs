@@ -19,8 +19,13 @@ namespace TimeKeepingAndPayroll.Tests
         public void viewEmployeeInvoices()
         {
             m_driver = new ChromeDriver();
-            m_driver.Url = "http://localhost:51729/Invoices/EmployeeIndex";
+            m_driver.Url = "http://localhost:51729/";
             m_driver.Manage().Window.Maximize();
+
+            m_driver.FindElement(By.Id("EmployeeID")).SendKeys("1");
+            m_driver.FindElement(By.XPath("//input[@value='Login']")).Click();
+            m_driver.FindElement(By.XPath(".//li//a[contains(text(), 'Payroll')]")).Click();
+
             IWebElement table = m_driver.FindElement(By.XPath(".//table[@class='table']"));
             m_driver.Close();
         }
@@ -29,8 +34,13 @@ namespace TimeKeepingAndPayroll.Tests
         public void createInvoice()
         {
             m_driver = new ChromeDriver();
-            m_driver.Url = "http://localhost:51729/Invoices/ManagerIndex";
+            m_driver.Url = "http://localhost:51729";
             m_driver.Manage().Window.Maximize();
+
+            m_driver.FindElement(By.Id("EmployeeID")).SendKeys("2");
+            m_driver.FindElement(By.XPath("//input[@value='Login']")).Click();
+            m_driver.FindElement(By.XPath(".//li//a[contains(text(), 'Manage Payroll')]")).Click();
+
             IWebElement createNewInvoiceBtn = m_driver.FindElement(By.XPath("//a[contains(text(),'Create')]"));
             createNewInvoiceBtn.Click();
             var employeeddl = m_driver.FindElement(By.Id("Employee_ID"));

@@ -21,12 +21,24 @@ namespace TimeKeepingAndPayroll.Controllers
         // GET: Invoices
         public ActionResult EmployeeIndex()
         {
-            return View(db.Invoice.ToList());
+            int EmployeeID = (int)Session["Name"];
+            var myPayroll = db.Invoice.Include(i => i.Employee).Where(i => i.Employee.EmployeeID == EmployeeID);
+            return View(myPayroll);
         }
 
         public ActionResult ManagerIndex()
         {
-            return View(db.Invoice.Include(e => e.Employee).Include(e => e.Employee.Name).ToList());
+            int EmployeeID = (int)Session["Name"];
+            if (db.Person.OfType<Employee>().Where(e => e.EmployeeID == EmployeeID).FirstOrDefault().canManagePayroll == true)
+            {
+                return View(db.Invoice.Include(e => e.Employee).Include(e => e.Employee.Name).ToList());
+            }
+
+            else
+            {
+                TempData["AlertMessage"] = "You cannot manage payroll. No sufficient permissions.";
+                return RedirectToAction("EmployeeIndex");
+            }
         }
         // GET: Invoices/Details/5
         public ActionResult Details(Guid? id)

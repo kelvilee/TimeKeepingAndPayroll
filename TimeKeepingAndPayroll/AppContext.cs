@@ -9,7 +9,7 @@ namespace TimeKeepingAndPayroll
 {
     public class AppContext : DbContext
     {
-        public AppContext() : base("timekeepingdb")
+        public AppContext() : base("TestTimeKeepingDB2")
         {
             Database.SetInitializer<AppContext>(new AppDBInitializer());
             this.Configuration.LazyLoadingEnabled = false;
