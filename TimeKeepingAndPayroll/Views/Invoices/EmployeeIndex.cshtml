@@ -29,27 +29,37 @@
 
     @foreach (var item in Model)
     {
-<tr>
-    <td>
-        @Convert.ToDateTime(item.PayDate).ToString("dd/MM/yyyy")
-    </td>
-    <td>
-        @Convert.ToDateTime(item.PayPeriodStart).ToString("dd/MM/yyyy") -
-        @Convert.ToDateTime(item.PayPeriodEnd).ToString("dd/MM/yyyy")
-    </td>
-    <td>
-       @Html.DisplayFor(modelItem => item.NetAmount)
-    </td>
-    <td>
-        @Html.ActionLink(" ", "Email", new { id = item.Employee_ID }, new { @class = "glyphicon glyphicon-envelope" })
-    </td>
-    <td>
-        @Html.ActionLink(" ", "Details", new { id = item.ID }, new { @class = "glyphicon glyphicon-print" })
-    </td>
-    <td>
-        @Html.ActionLink("Details", "Details", new { id = item.ID })
-    </td>
-</tr>
+        <tr>
+            <td>
+                @Convert.ToDateTime(item.PayDate).ToString("dd/MM/yyyy")
+            </td>
+            <td>
+                @Convert.ToDateTime(item.PayPeriodStart).ToString("dd/MM/yyyy") -
+                @Convert.ToDateTime(item.PayPeriodEnd).ToString("dd/MM/yyyy")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NetAmount)
+            </td>
+            <td>
+                @Html.ActionLink(" ", "Email", new { id = item.Employee_ID }, new { @class = "glyphicon glyphicon-envelope" })
+            </td>
+            <td>
+                @Html.ActionLink(" ", "Details", new { id = item.ID }, new { @class = "glyphicon glyphicon-print" })
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.ID })
+            </td>
+        </tr>
     }
 
 </table>
+
+@{
+    var message = TempData["AlertMessage"] ?? string.Empty;
+}
+
+<script type="text/javascript">
+    var message = '@message';
+    if(message)
+        alert(message);
+</script>
