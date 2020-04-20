@@ -21,6 +21,10 @@ namespace TimeKeepingAndPayroll.Controllers
         // GET: Invoices
         public ActionResult EmployeeIndex()
         {
+            if (Session["ID"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             int EmployeeID = (int)Session["Name"];
             var myPayroll = db.Invoice.Include(i => i.Employee).Where(i => i.Employee.EmployeeID == EmployeeID);
             return View(myPayroll);
@@ -28,6 +32,10 @@ namespace TimeKeepingAndPayroll.Controllers
 
         public ActionResult ManagerIndex()
         {
+            if (Session["ID"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             int EmployeeID = (int)Session["Name"];
             if (db.Person.OfType<Employee>().Where(e => e.EmployeeID == EmployeeID).FirstOrDefault().canManagePayroll == true)
             {
